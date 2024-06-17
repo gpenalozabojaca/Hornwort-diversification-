@@ -1,0 +1,60 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#
+#                Tree Inference 
+#
+#Tree Inference provides the most frequently used features of IQ-TREE and allows users to carry out phylogenetic analysis on a multiple sequence alignment (MSA)
+#
+# -alrt specifies the number of bootstrap replicates for SH-aLRT where 1000 is the minimum number recommended.
+# -bb specifies the number of bootstrap replicates where 1000 is the minimum number recommended.
+# -m is the option to specify the model name to use during the analysis.
+# -nt AUTO  Specify the number of CPU cores for the multicore version. A special option -nt AUTO will tell IQ-TREE to automatically determine the best number of cores given the current data and computer.
+# -st Specify sequence type as either of DNA, AA, BIN, MORPH, CODON or NT2AA for DNA, amino-acid, binary, morphological, codon or DNA-to-AA-translated sequences.
+# - mem  Specify maximal RAM usage, for example, -mem 64G to use at most 64 GB of RAM.
+# -s [dna alignment]
+# -pre [outfile]
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+# ejemplo aricle base: Dissecting Incongruence between Concatenation- and Quartet-Based Approaches in Phylogenomic Data
+# DOI: 10.1093/sysbio/syab011
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#!/bin/bash
+
+#SBATCH -J ML_IQtree_Genes_jun
+#SBATCH -o ML_IQtree_Genes_jun.out
+#SBATCH -c 1
+#SBATCH -p medium
+#SBATCH --mail-type=ALL
+#SBATCH --time=5-00:00
+#SBATCH --mem=5G
+
+cd ~/Hornworts_GoFlag/Gabriel/
+
+module load iq-tree/1.6.12
+module load iq-tree/2.1.3
+
+
+#-----------------------------------
+#Gene_supermatrix run 
+
+#iqtree2 -p 0_Data_sequences/Gene_seq/GenesData --prefix concat -B 1000 -T 1
+#iqtree2 -S ./0_Data_sequences/Gene_seq/GenesData --prefix gene -T 1
+#iqtree2 -t concat.treefile --gcf gene.treefile -p ./0_Data_sequences/Gene_seq/GenesData --scf 100 --prefix concord -T 1
+
+
+
+

@@ -1,0 +1,251 @@
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#
+#                            ASTRAL ANALISES  (Full data hornworts goflag)
+
+# directory Astral
+gabriel@gabriel-Box:~/Documents/programas/Astral$
+
+# Configuration Astral analises
+
+
+-i                   :  <input file>
+-o out.tre 2>out.log :  <output file> : ASTRAL outputs lots of useful information to your screen (stderr, really). You can capture this #                       information by directing your stderr to a file. Capturing the log is highly recommended. 
+-q   .tre       :  option in ASTRAL to score an existing species tree to produce its quartet score, compute its branch lengths, 
+#                       and compute its ASTRAL branch support values.
+#                     To get the .csv outputs, you can use -t 16 and -t 32
+#                     4th column is likely you are interested in and it depends on whether you used -t 16 or -t 32.
+-t 16                :  This column is the local posterior for the topology given in this line. 
+#                       Note that the local posterior probability is different from normalized quartet score. 
+-t 32                :  This column is simply 5th column divided by 6 column. Thus, it gives the normalized quartet score for that #      #                       topology. Note that the three lines with the same node name (1st column) will add up to one in their 4th column.
+#                    see https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial-template.md#installation
+
+#   -t 2             : Full annotation: When you use this option, for each branch you get a lot of different measurements:
+#				q1,q2,q3: these three values show quartet support (as defined in the description of -t 1) for the main 					topology, the first alternative, and the second alternative, respectively.
+#				f1, f2, f3: these three values show the total number of quartet trees in all the gene trees that support 					the main topology, the first alternative, and the second alternative, respectively.
+#				pp1, pp2, pp3: these three show the local posterior probabilities (as defined in the description of -t 4) 					for the main topology, the first alternative, and the second alternative, respectively.
+#				QC: this shows the total number of quartets defined around each branch (this is what our paper calls m).
+#				EN: this is the effective number of genes for the branch. If you don't have any missing data, this would 					be the number of branches in your tree. When there are missing data, some gene trees might have nothing to 				say about a branch. Thus, the effective number of genes might be smaller than the total number of genes.
+
+#-----------------------------
+
+Guided method https://osf.io/295qp/wiki/home/
+
+# concatenated the best tree files to create the input for ASTRAL-III.
+
+# cd tree_folder/
+# cat *.tre > Gene_Trees_Input.tre
+
+#-----------------------------
+
+# Base genes tree file made from RAxML analysis
+
+cd ./IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/2_1_Genes_full_BS_RAxML_10_Ago2021/results/2_1_1_RAxML_bestTree
+
+cat *.phy > Genes_geneTrees.tre
+
+Out file: Genes_geneTrees.tre
+
+
+# -------------------------------------------------------------------#
+# -------------------------------------------------------------------#
+# -------------------------------------------------------------------#
+# -------------------------------------------------------------------#
+
+# we began by inferring a species tree from the set of gene trees
+
+:~/Documents/programas/Astral$
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre
+
+#  out file: SpeciesTree_Genes.tre
+
+# -------------------------------------------------------------------#
+
+
+#  Standard scoring, Scoring existing trees
+
+#You can use the -q option in ASTRAL to score an existing species tree to produce its quartet score, compute its branch lengths, and compute its ASTRAL branch support values. The ASTRAL score is the fraction of the induced quartet trees in the input set that are in the species tree. So, a score of 0.9 would mean that 90% of the quartet trees induced by your gene trees are in your species tree.
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_Scores_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_Scores_10Ago2021.log 
+
+
+  out files: Genes_Scores_10Ago2021.tre  and  Genes_Scores_10Ago2021.log
+
+
+# -------------------------------------------------------------------#
+
+
+# Quartet support (-t 1): 
+
+# The percentage of quartets in your gene trees that agree with a branch (normalized quartet support) give use a nice way of measuring the amount of gene tree conflict around a branch. Note that the local posterior probabilities are computed based on a transformation of normalized quartet scores
+#------------------
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/2_RAxML_genes_trees/Genes_RAXML_bestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/SpeciesTree_Genes.tre -t 1 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t1_Quart_supp_17Mai2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t1_Quart_supp_17Mai2021.log
+
+  out files: Horn_Genes_t1_Quart_supp_17Mai2021.tre  and  Horn_Genes_t1_Quart_supp_17Mai2021.log
+
+# -------------------------------------------------------------------#
+
+
+# Alternative quartet topologies (-t 8)
+
+#Outputs q1, q2, q3; these three values show quartet support (as defined above) for the main topology (LR|SO), first alternative (RS|LO) and second alternative (RO|LS), respectively.
+#------------------
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -t 8 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t8_AlterQuar_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t8_AlterQuar_10Ago2021.log 
+
+ out files: Genes_t8_AlterQuar_10Ago2021.tre  and  Genes_t8_AlterQuar_10Ago2021.log
+
+
+# -------------------------------------------------------------------#
+
+Local posterior (-t 3): 
+
+# is the default where we show local posterior probability for the main topology.
+#------------------
+
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/2_RAxML_genes_trees/Genes_RAXML_bestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/SpeciesTree_Genes.tre -t 3 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t3_Lpp_17Mai2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t3_Lpp_17Mai2021.log
+
+  out files: Horn_Genes_t3_Lpp_17Mai2021.tre  and  Horn_Genes_t3_Lpp_17Mai2021.log
+
+# -------------------------------------------------------------------#
+
+
+# Alternative posteriors (-t 4)
+
+#The output includes three local posterior probabilities: one for the main topology, and one for each of the two alternatives (RS|LO and RO|LS, in that order). The posterior of the three topologies adds up to 1. This is because of our locality assumption, which basically asserts that we assume the four groups around the branch (L, R, S, and O) are each correct and therefore, there are only three possible alternatives.
+#------------------
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -t 4 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t4_AlterLpp_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t4_AlterLpp_10Ago2021.log 
+
+ out files: Genes_t4_AlterLpp_10Ago2021.tre  and  Genes_t4_AlterLpp_10Ago2021.log
+
+# -------------------------------------------------------------------#
+
+
+# Polytomy test (-t 10)
+
+#  runs an experimental test to see if a null hypothesis that the branch is a polytomy could be rejected
+#------------------
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/2_RAxML_genes_trees/Genes_RAXML_bestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/SpeciesTree_Genes.tre -t 10 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t10_polytomyTest_17Mai2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/3_Quartet-based_Astral/Genes_Astral/Horn_Genes_t10_polytomyTest_17Mai2021.log
+
+  out files: Horn_Genes_t10_polytomyTest_17Mai2021.tre  and  Horn_Genes_t10_polytomyTest_17Mai2021.log
+
+
+# -------------------------------------------------------------------#
+
+
+# Full annotation (-t 2)
+
+# When you use this option, for each branch you get a lot of different measurements
+
+#------------------
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -t 2 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t2_FullAnnotation_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t2_FullAnnotation_10Ago2021.log 
+
+  out files: Genes_t2_FullAnnotation_10Ago2021.tre  and  Genes_t2_FullAnnotation_10Ago2021.log
+
+# -------------------------------------------------------------------#
+
+
+#  KEY
+#  since freqQuad.csv is tab-delimited, if you open it with Excel, you may have better luck if you rename it to freqQuad.txt or freqQuad.tsv
+#  Please ignore the R script freqQuadVisualization.R. That script is not to be used stand-alone. It can only be used within DiscoVista.
+
+# --------------
+# --------------
+# --------------
+# 
+#4th column is likely you are interested in and it depends on whether you used
+# -t 16 This column is the local posterior for the topology given in this line. Note that the local posterior probability is different from normalized quartet score.
+# -t 32: This column is simply 5th column divided by 6 column. Thus, it gives the normalized quartet score for that topology. Note that the three lines with the same node name (1st column) will add up to one in their 4th column.
+
+# --------------
+# --------------
+# --------------
+
+# important: Once -t16 is shot edit the files freqQuadVisualization.R and freqQuad.csv in the output folder before running -t32. Or it may be overwriting them
+
+
+# Genes t-16
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -t 16 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t16Scores_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t16Scores_10Ago2021.log 
+
+  out files: Genes_t16Scores_10Ago2021.tre  and  Genes_t16Scores_10Ago2021.log, freqQuadVisualization_t16Scores_10Ago2021.R , freqQuad_t16Scores_10Ago2021.csv
+  
+  Genes t-32
+ 
+ java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/Genes_BS_RAxML_10_Ago2021/results/BestTree/Genes_geneTrees.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/SpeciesTree_Genes.tre -t 32 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t32Scores_10Ago2021.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/Genes_full_10Ago2021/Genes_t32Scores_10Ago2021.log 
+  
+  out files: Genes_t32Scores_10Ago2021.tre  and  Genes_t32Scores_10Ago2021.log, freqQuadVisualization_t32Scores_10Ago2021.R , freqQuad_t32Scores_10Ago2021.csv
+
+
+
+# -------------------------------------------------------------------#
+
+# -------------------------------------------------------------------#
+ 
+# ------------------------- DiscoVista ------------------------------#
+
+
+cd Documents/programas/DiscoVista/
+
+sudo docker run -v /home/gabriel/Documents/programas/DiscoVista:/data esayyari/discovista generate_clade-defs.py parameters/anotation_names-ordens_horn.txt parameters/generate_clade-defs.txt
+
+#  out files: generate_clade-defs.txt
+#-----------------------------------------------------------------
+
+
+# Relative frequencey analysis
+
+#  RAxML_bipartitionsBranchLabels
+# -------------------------------------------------------------------#
+# -------------------------------------------------------------------#
+
+# Discovista Data: FullData  RUN: 20 jan 2022
+
+# 1) usar arboles con RAxML_bipartitionsBranchLabels to genes trees
+
+cd /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/2_RAxML_genes_trees/2_1_Genes_full_BS_RAxML_10_Ago2021/results/2_1_4_RAxML_biparBranch
+
+cat *.phy > bipar_geneTrees.tre
+cd
+
+# Out file: bipar_geneTrees.tre
+
+# 2. we began by inferring a species tree from the set of gene trees
+
+cd /home/gabriel/Documents/programas/Astral
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/3_1_Genes_full_10Ago2021/3_1_1_Astral_geral/DiscoVista_bipartBranchLab_trees/bipar_geneTrees.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/3_Quartet-based_Astral/3_1_Genes_full_10Ago2021/3_1_1_Astral_geral/DiscoVista_bipartBranchLab_trees/SpeciesTree_bipar.tre
+
+#  out file: SpeciesTree_bipar.tre
+
+cd Documents/programas/DiscoVista/
+
+# 3) Relative frequencey
+
+sudo docker run -v /home/gabriel/Documents/programas/DiscoVista:/data esayyari/discovista discoVista.py -a parameters/anotation_names-ordens_horn.txt -m 5 -p Trees_data/3_3_1_Genes_full -o Trees_data/3_3_1_Genes_full/results_Relafreq -g Base
+
+

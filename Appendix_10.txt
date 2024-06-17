@@ -1,0 +1,294 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#   TREEPL
+
+-----------------------
+#   install  
+
+
+Installation using Homebrew/Linuxbrew
+Compiling treePL from source can be tricky and difficult. 
+The Brewsci project provides binary downloads of treePL for both macOS and Linux.
+
+# sudo https://hub.docker.com/r/linuxbrew/linuxbrew/
+
+sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+#-#--------------------------------
+#----------------------------------
+# https://arxiv.org/ftp/arxiv/papers/2008/2008.07054.pdf
+#   An empirical guide for producing a dated phylogeny with treePL in a
+#   maximum likelihood framework
+#   Kévin J. L. Maurin
+
+
+
+#### good tutorial see Maurin 2018:
+
+#----------------------------------
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+#----------------------------------  Edited the Configure file  IQTREE FILE 515 MY   boot_N1000  rooted --------------------
+
+
+treefile = /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_1_IqTree_Fulldata/Data_515MY/BS_replicas_BS1000_IQtree/IQtree_Sptree_Fulldata_N1000_boot_rooted.tre
+
+# [output file of dating step
+
+ outfile = /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_1_IqTree_Fulldata/Data_515MY/BS_replicas_BS1000_IQtree/IQtree_Sptree_Fulldata_N1000_boot_rooted_515MY_V5.tre
+
+
+# [general commands]
+ log_pen  
+
+numsites = 80855
+nthreads = 5
+
+
+[calibrations: mrca needs two names that define one common ancestor on which the calibration will be set]
+
+mrca = ROOT UFG_393202_P031_WE01_Sphagnum_magellanicum UFG_393201_P02_WA01.Leiosporoceros_dussii 
+max = ROOT 515
+
+#-----
+# [Leiosporoceros como hermano de todos los Hornworts]
+
+mrca = Anthoceros_spore UFG_393202_P053_WC05_Anthoceros_tristanianus UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus
+min = Anthoceros_spore 118
+max = Anthoceros_spore 515
+
+#-----
+# [Leiosporoceros como hermano de Anthocerotaceae]
+
+# mrca = Anthoceros_spore UFG_393201_P02_WA01.Leiosporoceros_dussii UFG_393202_P053_WC05_Anthoceros_tristanianus
+# min = Anthoceros_spore 118
+# max = Anthoceros_spore 515
+
+#-----
+
+mrca = Notothylites_nirulai UFG_393202_P053_WB04_Notothylas_breutelii UFG_393202_P033_WC01_Phaeoceros_laevis
+min = Notothylites_nirulai 65
+max = Notothylites_nirulai 515
+
+mrca = Phaeomegaceros_Uscari UFG_393202_P053_WG06_Phaeomegaceros_coriaceus UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus 
+min = Phaeomegaceros_Uscari 15
+max = Phaeomegaceros_Uscari 515
+
+mrca = Ricciopsis_ferganica UFG_393202_P033_WB04_Ricciocarpos_natans UFG_393202_P033_WA04_Riccia_beyrichiana
+min = Ricciopsis_ferganica 227
+max = Ricciopsis_ferganica 515
+
+mrca = Constr_mosses UFG_393202_P031_WE01_Sphagnum_magellanicum UFG_393202_P040_WA09_Anomodon_attenuatus 
+min = Constr_mosses 417
+max = Constr_mosses 515
+
+mrca = Constr_liverworts UFG_393202_P034_WF07_Riccardia_incurvata UFG_393202_P033_WA04_Riccia_beyrichiana
+min = Constr_mosses 448
+max = Constr_mosses 515
+
+[option command]
+
+prime       [designate that you want to determine the best optimization parameters]
+thorough    [designate that you want a thorough analysis]
+log_pen     [rate penalty will use log instead of additive function]
+
+
+[priming command]
+
+# prime       [designate that you want to determine the best optimization parameters]
+
+
+[best optimisation parameters]
+
+# -----  option A -------
+opt = 1
+moredetail
+optad = 2
+moredetailad
+optcvad = 1
+moredetailcvad
+
+
+# ------   option B -----
+#opt = 2
+#moredetail
+#optad = 2
+#moredetailad
+#optcvad = 1
+#moredetailcvad
+
+
+[cross-validation analysis]
+# randomcv
+# cviter = 5
+# cvsimaniter = 1000000000
+# cvstart = 100000
+# cvstop = 0.000000000001
+# cvmultstep = 0.1
+# cvoutfile = /home/gabriel/Docs_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_1_IqTree_Fulldata/randomcv_IQtree_fuldat_Sptree_nBS_rooted_515MY_V1_2a1.txt
+
+# [best smooting value]
+ smooth = 0.000000001
+
+
+
+#--------------------------- run analises
+
+ # a)  confi v1_5a :    IqTree  ------  515MY with replicates N1000 
+
+treePL /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_1_IqTree_Fulldata/Confi_tests/Confi_Test_01_Iqtre_fullData_V1_5a
+
+# b) Consensus construction  tree   ------
+#  used TreeAnnotator v. 2.5.2 [7], with 0% of burnin and mean node heights. The other settings do not matter since the nodes will have a BS support of 100%, given that the BS replicates were produced using a topology constraint
+
+# ejecutar programa TreeAnnotator en windows
+
+
+ # a)  confi v1_5b :    IqTree  ------  515MY with replicates N1000 
+
+treePL /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_1_IqTree_Fulldata/Confi_tests/Confi_Test_01_Iqtre_fullData_V1_5b
+
+# b) Consensus construction  tree   ------
+#  used TreeAnnotator v. 2.5.2 [7], with 0% of burnin and mean node heights. The other settings do not matter since the nodes will have a BS support of 100%, given that the BS replicates were produced using a topology constraint
+
+# ejecutar programa TreeAnnotator en windows
+
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+#----------------------------------  Edited the Configure file  ASTRAL FILE 515 MY   boot_N1000  rooted --------------------
+
+
+treefile = /home/gabriel/Docs_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_2_Astral_Fulldata/BS_replicates_N1000/Ast_Sptree_N1000_boot_rooted.tre
+
+# [general commands]
+
+numsites = 80855
+nthreads = 4
+
+outfile = /home/gabriel/Docs_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_2_Astral_Fulldata/Data_550MY/Ast_Sptree_N1000_boot_rooted_550MY.tre
+
+
+# [general commands]
+
+numsites = 80855
+nthreads = 5
+
+
+# [calibrations: mrca needs two names that define one common ancestor on which the calibration will be set]
+
+mrca = ROOT UFG_393202_P031_WE01_Sphagnum_magellanicum UFG_393202_P019_WB08_Nothoceros_aenigmaticus 
+max = ROOT 515
+
+#-----
+# [Leiosporoceros como hermano de todos los Hornworts]
+
+# mrca = Anthoceros_spore UFG_393202_P053_WC05_Anthoceros_tristanianus UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus
+# min = Anthoceros_spore 118
+# max = Anthoceros_spore 515
+
+#-----
+# [Leiosporoceros como hermano de Anthocerotaceae]
+
+ mrca = Anthoceros_spore UFG_393201_P02_WA01.Leiosporoceros_dussii UFG_393202_P053_WC05_Anthoceros_tristanianus
+ min = Anthoceros_spore 118
+ max = Anthoceros_spore 515
+
+#-----
+
+mrca = Notothylites_nirulai UFG_393202_P053_WB04_Notothylas_breutelii UFG_393202_P033_WC01_Phaeoceros_laevis
+min = Notothylites_nirulai 65
+max = Notothylites_nirulai 515
+
+mrca = Phaeomegaceros_Uscari UFG_393202_P053_WG06_Phaeomegaceros_coriaceus UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus 
+min = Phaeomegaceros_Uscari 15
+max = Phaeomegaceros_Uscari 515
+
+mrca = Ricciopsis_ferganica UFG_393202_P033_WB04_Ricciocarpos_natans UFG_393202_P033_WA04_Riccia_beyrichiana
+min = Ricciopsis_ferganica 227
+max = Ricciopsis_ferganica 515
+
+mrca = Constr_mosses UFG_393202_P031_WE01_Sphagnum_magellanicum UFG_393202_P040_WA09_Anomodon_attenuatus 
+min = Constr_mosses 417
+max = Constr_mosses 515
+
+mrca = Constr_liverworts UFG_393202_P034_WF07_Riccardia_incurvata UFG_393202_P033_WA04_Riccia_beyrichiana
+min = Constr_mosses 448
+max = Constr_mosses 515
+
+[option command]
+
+#prime       # [designate that you want to determine the best optimization parameters]
+thorough    # [designate that you want a thorough analysis]
+log_pen     # [rate penalty will use log instead of additive function]
+
+
+
+#[best optimisation parameters]
+
+# ------ option A ------
+opt = 5
+optad = 5
+optcvad = 3
+moredetailad
+
+# ----- option B -------
+#opt = 5
+#optad = 5
+#optcvad = 0
+
+#[cross-validation analysis]
+# randomcv
+# cviter = 5
+# cvsimaniter = 1000000000
+# cvstart = 100000
+# cvstop = 0.000000000001
+# cvmultstep = 0.1
+# cvoutfile = /home/gabriel/Docs_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_2_Astral_Fulldata/randomcv_Astral_fulldata_550MY_V1_2_2.txt.txt
+
+# [best smooting value]
+ smooth = 0.000000001
+     
+
+#--------------------------- run analises
+
+ # a) confi v_5a :    astral  ------  515MY with replicates N1000 
+
+treePL /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_2_Astral_Fulldata/Confi_tests/Confi_Test_Astral_fullData_v5a
+
+
+# b) Consensus construction  tree   ------
+#  used TreeAnnotator v. 2.5.2 [7], with 0% of burnin and mean node heights. The other settings do not matter since the nodes will have a BS support of 100%, given that the BS replicates were produced using a topology constraint
+
+# ejecutar programa TreeAnnotator en windows
+
+
+
+
+ # a) confi v1_5b :    astral  ------  515MY with replicates N1000 
+
+treePL /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/12_TreePL/12_2_Astral_Fulldata/Confi_tests/Confi_Test_Astral_fullData_v5b
+
+# b) Consensus construction  tree   ------
+#  used TreeAnnotator v. 2.5.2 [7], with 0% of burnin and mean node heights. The other settings do not matter since the nodes will have a BS support of 100%, given that the BS replicates were produced using a topology constraint
+
+# ejecutar programa TreeAnnotator en windows
+
+
+

@@ -1,0 +1,89 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#                            ESTIMATE GENE TREES WIHT RAXML
+### ------------------------------------  KEY  ---------------  ###  
+# Beside the raxml_wrapper script, a config.raxml script is needed, the RAxML executable (in the same directory as the scripts), 
+# and the folder with the single loci Phylip files (L*.phy) also in the same directory as the scripts and executable.
+### ----------------------------------------------------------  ###  
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# 1) 
+
+# file raxml_gene_trees_hotn.sh , type bash,  
+
+#!/bin/bash
+perl raxml_wrapper_horn.pl -c config_horn.raxml -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out -o RAXML_out_MP_genes
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# 2)
+
+# file config_horn_raxml
+
+# !!Attention if it is MP or BS!!!
+
+#######----------- MP ----------------###
+
+RAXML='/home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out/raxmlHPC-AVX'  
+PARAMETERS= -T 2 -m GTRGAMMA -f d -p 12345 -N 10 -n best.tre
+
+#######----------- BS ----------------###
+
+RAXML='/home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out/raxmlHPC-AVX' 
+PARAMETERS= -T 2 -m GTRGAMMA -f d -p 12345 -b 12345 -N 20 -n BS.tre
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# 3)
+
+# file raxml_wrapper_horn.pl
+
+#kEY:In the wrapper script, I changed the -w to the path of my defined output directory.
+#LINE 60
+
+$raxml .= " -w /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out/RAXML_out_MP_genes/results";
+   
+####
+# line command  (RUN)
+
+~Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out$ 
+
+# Command was used for estimating the best ML trees
+
+perl raxml_wrapper_horn.pl -c config_horn_MP.raxml -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out -o RAXML_out_MP_genes
+
+
+
+##  RAXML L1.keep1.phy
+##  RAXML L10.keep1.phy
+##  RAXML L100.keep1.phy
+##  ...
+
+# command was used for bootstrapping
+
+# Attention: change the output folder from RAXML_out_MP to RAXML_out_bootstra_N20 in the wrappel script
+
+perl raxml_wrapper_horn_BS.pl -c config_horn_BS.raxml -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/Hornworts_G2/genes_out -o RAXML_out_bootstra_N20_genes
+
+##  RAXML L1.keep1.phy
+##  RAXML L10.keep1.phy
+##  RAXML L100.keep1.phy
+##  ...
+
+

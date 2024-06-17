@@ -1,0 +1,62 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#!/bin/bash
+
+#SBATCH -J topo_tes7
+#SBATCH -o topo_tes7_07_Mar.out
+#SBATCH -c 1
+#SBATCH -p medium
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user= ....@gmail.com
+#SBATCH --time=5-00:00
+#SBATCH --mem=1G
+
+cd ~/Hornworts_GoFlag/Gabriel/
+
+   module load iq-tree/1.6.12
+   module load iq-tree/2.1.3 
+
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#                                                   Concordance factors
+
+# - infer a concatenation-based species tree with 1000 ultrafast bootstrap and an edge-linked 1000 
+
+# mkdir IQtree_Genes_10_Ago2021
+# iqtree2 -p ./0_Data_sequences/Genes_new_leios --prefix Concat -alrt 1000 -B 1000 -T 2 
+# mv Concat* IQtree_Genes_10_Ago2021
+
+# - Inferring gene trees
+
+# iqtree2 -S ./0_Data_sequences/03_Gene_seq_with_new_genes_leios/Genes_new_leios --prefix FullGenes -T 1
+# mv FullGenes* ./IQtree_result/IQtree_FullGenes_10_Ago2021
+
+# - compute concordance factors
+
+# iqtree2 -t ./IQtree_result/IQtree_FullGenes_10_Ago2021/Concat.treefile --gcf ./IQtree_result/IQtree_FullGenes_10_Ago2021/FullGenes.treefile -p ./0_Data_sequences/03_Gene_seq_with_new_genes_leios/Genes_new_leios --scf 100 --prefix ConcordFullGen -T 1
+# mv ConcordFullGen* ./IQtree_result/IQtree_FullGenes_10_Ago2021
+
+
+#-----------------------------------------------
+# compute concordance factors; with option to:
+# --df-tree    : Print the tree corresponding for gDF1 and gDF2 for each branch 
+# --cf-quartet : Write sCF for all resampled quartets to .cf.quartet 
+# --cf-verbose : Write CF per tree/locus to cf.stat_tree/_loc ;  
+
+
+# iqtree2 -t ./IQtree_result/1_1_1_IQtree_FullGenes_10_Ago2021/Concat.treefile --gcf ./IQtree_result/1_1_1_IQtree_FullGenes_10_Ago2021/FullGenes.treefile -p ./0_Data_sequences/03_Gene_seq_with_new_genes_leios/Genes_new_leios --scf 100 --prefix ConcordFullGen_topo -T 1 --df-tree --cf-verbose --cf-quartet 
+
+
+# website references: 
+# http://www.iqtree.org/doc/Concordance-Factor
+# http://www.robertlanfear.com/blog/files/concordance_factors.html

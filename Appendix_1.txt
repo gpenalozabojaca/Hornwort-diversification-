@@ -1,0 +1,96 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+Assembly of Phylogenetic Data
+We first trimmed  the raw Illumina sequence reads with Trim Galore! Version 0.4.4 (https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) to remove adapters and bases with a Phred score below 20. We then ran the GoFlag iterative baited assembly (IBA) pipeline, described in Brienholt et al. (2021), to assemble the trimmed reads into multiple sequence alignments for each targeted locus. The scripts for this pipeline are available at https://doi.org/10.5061/dryad.7pvmcvdqg. For each locus, the pipeline uses USEARCH v7.0 (Edgar, 2010) to identify significant homology matches to reference sequences, and then performs a de novo assembly with BRIDGER version 2014-12-01 (Chang et al., 2015) to assemble the homology matches. The pipeline also includes an orthology check and contaminated filter. We aligned the assembled sequences from the target regions of each locus with MAFFT version 7.425 (Katoh and Standley, 2013) and merged any isoforms (i.e., putative alleles) from the same taxon by replacing heterozygous sites with IUPAC ambiguity codes to represent multiple nucleotides. Still, in some cases, some samples will have more than one sequence in the output alignment, and these could represent paralogs. 
+
+Breinholt, J.W., Carey, S.B., Tiley, G.P., Davis, E.C., Endara, L., McDaniel, S.F., Neves, L.G., Sessa, E.B., von Konrat, M., Chantanaorrapint, S., Fawcett, S., Ickert-Bond, S. M., Labiak, P. H., Larra’n, J., Lehnert, M., Lewis, L. R., Nagalingum, N. S., Patel, N., Rensing, S. A., Testo, W., Vasco, A., Villarreal, J. C., Williams, E. W., and Burleigh, J. G. (2021). A target enrichment probe set for resolving the flagellate land plant tree of life. Appl. Plant Sci. 9, e11406.
+
+Chang, Z., Li, G., Liu, J., Zhang, Y., Ashby, C., Liu, D., Cramer, C.L., Huang, X. (2015). Bridger: a new framework for de novo transcriptome assembly using RNA-seq data. Genome Biol. 16, 30.
+
+Edgar, R. C. 2010. Search and clustering orders of magnitude faster than BLAST. Bioinformatics 26: 2460-2461.
+
+Katoh, K., and Standley, D.M. (2013). MAFFT multiple sequence alignment software version 7: improvements in performance and usability. Mol. Biol. Evol. 30, 772Ð780.
+
+#---------------------------------
+After running the pipeline, we ran the following steps to further clean the locus sequence alignments.
+
+
+# 1a_rmall.pl
+# To reduce possible problems associated with paralogy, we ran the script "rmall.pl", which removes all copies of a sample in a locus alignment for samples with >1 sequence. The script also transforms the alignment from fasta format to phylip format. The input files are "L*.afa", and the output of this script are "L*.nodups.phy". 
+# Go to the directory with the sequences
+
+~/Documents/Clean_seq_Goflag/Sequences$
+
+perl 1a_rmall.pl
+mkdir 1a_rmall_filter_seq
+mv L*.phy 1a_rmall_filter_seq
+
+#---------------------------------
+
+# 1b_keep1.pl
+# Alternately, if you do not want to get remove all of the samples with multiple copies from each locus alignment, the script "keep1.pl" keeps the longest copy- the one with the most A,C,G, or T nucleotides. The output for that are the "L*.keep1.phy" files. So the "L*.keep1.phy" files will have more sequences than the "L*.nodups.phy" files, but they may include some paralogs.
+
+perl 1b_keepone.pl | mkdir 1b_keepone_filter_seq
+mv L*.phy 1b_keepone_filter_seq
+
+#---------------------------------
+
+# 2_rmbad.pl 
+# The script "rmbad.pl". This script reads in the sample names in the file "names_delet_test04.txt".
+# - it removes those samples from the files "L*.nodups.phy", and for the other sample names, it changes any periods "." 
+# to underscores "_". The output files are named "L*.nodups.ED.phy".
+
+~/Documents/Clean_seq_Goflag/Sequences/1a_rmall_filter_seq$ 
+perl 2_rmbad.pl | mkdir 2_rmbad_edite_seq | mv *ED.phy 2_rmbad_edite_seq
+
+#---------------------------------
+
+# 3_filtermissing.pl
+# The script "filtermissing.pl" removes any columns in the alignment that have fewer than 10 characters (although you can easily change this to any minimum number). The output of this script are the "*.prune.phy" files.
+
+~/Documents/Clean_seq_Goflag/Sequences/1a_rmall_filter_seq/2_rmbad_edite_seq$ 
+perl 3_filtermissing.pl | mkdir 3_filter_seq 
+mv *prune.phy 3_filter_seq
+
+#---------------------------------
+
+# 4_SuperMatriz_concate.pl
+# The SuperMatriz_concate.pl.pl script concatenates the "*.prune.phy" files into a supermatrix. 
+
+perl 4_SuperMatriz_concate.pl| mkdir 4_supermatrix_locis
+mv Locis* 4_supermatrix_locis
+
+#---------------------------------
+
+# 5_geneconcatenate.pl
+# The loci targeted by the GoFlag flagellate plant probe set are named L1, L2, and so on, and they correspond to individual exons. 
+# Some of these exons are in the same gene. Therefore, we concatenated any of the GoFlag loci that are found in the same gene to  
+# make "gene" alignments. These gene alignments have named "G*.nodups.prune.phy". The number corresponds to the numbering 
+# system used by 1KP- and the file "GFvs1kp.txt" shows which GoFlag loci are found in which 1KP genes. The resulting gene alignments 
+# contain from 1 to 9 exons.
+
+perl 5_geneconcatenate.pl
+mkdir 5_genes_seq |  mv G* 5_genes_seq
+
+#---------------------------------
+
+# 6_Gene_superMatriz_concate.pl
+# Finally, we concatenated file for all of the genes alignments.
+
+perl 6_Gene_superMatriz_concate.pl
+mkdir 6_Gene_superMatriz |  mv *ConcateFull* 6_Gene_superMatriz
+
+#---------------------------------
+
+

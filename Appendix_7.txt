@@ -1,0 +1,107 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# Run in IQTree
+
+#  We now illustrate an example to use the AU test (see above) to test trees from uncon- strained versus constrained search, 
+#  which is helpful to know if a constrained search is sensible or not
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#
+#                                                 Tree topology tests IQ-TREE
+
+
+#    iqtree -s example.phy -z example.treels -n 0 -zb 1000 -zw -au
+# ----------------------------------
+#
+# 	FULL DATA
+#
+
+cd /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests
+
+cat Hipo_1_Leios_sister_all.nwk Hipo_2_Leios-anthoce.nwk Hipo_3_Leios_sister_others.nwk > example_T1T2T3.treels
+
+cd
+ 
+cd /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/9_1_FullData/9_1_4_Test3_T1T2T3/
+
+ 
+#  -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/04_Gene_supermatrix/234Gene_95taxaHornw_ConcateFull.phy
+  
+#  -z /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/example_T1T2T3.treels
+ 
+
+
+# test 3 con particion  
+
+# -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/04_Gene_supermatrix/particiones_Genes_SuperMatriz_10Ago2021s.txt
+
+
+  iqtree2 -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/04_Gene_supermatrix/234Gene_95taxaHornw_ConcateFull.phy -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/04_Gene_supermatrix/particiones_Genes_SuperMatriz_10Ago2021s.txt -z /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/example_T1T2T3.treels -nt 1 -zb 10000 -zw -au -wpl -pre TreTopTtes3_T1T2T3FULLData_Result
+
+# ----------------------------------
+#
+# 	FULL DATA CONSISTEN
+#
+
+cd /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/9_2_FullData_Consis/9_2_4_Test3_T1T2T3
+
+#  -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/05_2_Consistent_genes_supermatrix/161Gene_Consistent_10Ago2021.phy
+
+# test 3 con particion  
+
+# -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/05_2_Consistent_genes_supermatrix/Partition_161Gene_Consistent_10Ago2021_RAxML.txt
+
+
+ iqtree2 -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/05_2_Consistent_genes_supermatrix/161Gene_Consistent_10Ago2021.phy -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/05_2_Consistent_genes_supermatrix/Partition_161Gene_Consistent_10Ago2021_RAxML.txt -z /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/example_T1T2T3.treels -nt 1 -zb 10000 -zw -au -wpl -pre TreTopTtes3_T1T2T3FULLData_CONSIST_Result
+
+
+# ----------------------------------
+#
+# 	ONLY LEIOS
+#
+
+cd /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/9_3_OnlyLeios/9_3_4_Test3_T1T2T3
+
+# -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_2_Genes_with_leios_only_supermatrix/195Gene_WithLeios_14Sep2021.phy
+
+# test 3 con particion  
+
+# -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_2_Genes_with_leios_only_supermatrix/Partition_195Gene_WithLeios_14Sep2021_RaxML.txt
+
+iqtree2 -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_2_Genes_with_leios_only_supermatrix/195Gene_WithLeios_14Sep2021.phy -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_2_Genes_with_leios_only_supermatrix/Partition_195Gene_WithLeios_14Sep2021_RaxML.txt -z /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/example_T1T2T3.treels -nt 1 -zb 10000 -au -wpl -pre TreTopTtes3_T1T2T3ONLYLEIOS_Result
+# ----------------------------------
+#
+# 	ONLY LEIOS CONSIST   
+#
+
+cd /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/9_4_OnlyLeios_Consis/9_4_4_Test3_T1T2T3
+
+# -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_4_OnlyLeios_consistenGen_Supermatrix/133Gene_WithLeios_Consist_24Sep2021.phy
+
+# test 3 con particion  
+# -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_4_OnlyLeios_consistenGen_Supermatrix/Partition_133Gene_WithLeios_Consist_24Sep2021_RaxML.txt
+
+iqtree2 -s /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_4_OnlyLeios_consistenGen_Supermatrix/133Gene_WithLeios_Consist_24Sep2021.phy -spp /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/0_Data_genes_03Ag02021/07_4_OnlyLeios_consistenGen_Supermatrix/Partition_133Gene_WithLeios_Consist_24Sep2021_RaxML.txt -z /home/gabriel/Documentos/Doc_compartidos/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/9_Tree_topology_tests/example_T1T2T3.treels -nt 1 -zb 10000 -au -wpl -pre TreTopTtes3_T1T2T3ONLYLEIOS_CONSIST_Result
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+

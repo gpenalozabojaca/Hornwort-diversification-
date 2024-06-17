@@ -1,0 +1,388 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# Analises incongruence between concatenation-based IQ-TREE and quartet-basedASTRAL
+
+# aricle base: Dissecting Incongruence between Concatenation- and Quartet-Based Approaches in Phylogenomic Data
+# DOI: 10.1093/sysbio/syab011
+#
+#
+#----------------------------------------------------------------------------------------------------------------------------------
+#
+# Previously ran on:
+#
+# 1) IqTree:  analises with hornworts seq per genes, we used full data with concatenate sequenceanalises with hornworts seq per genes, Used concatenec sequence.
+# out file the analises used Maximum-likelihood tree: ".treefile" 
+#
+# 2) Astral: Standard scoring, Scoring existing trees (-q option)
+# out files: "_Scores_17Mai2021.tre
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# We provided two  sections to calculate GLS and GQS for every gene. Both can handle gene trees with missing taxa. 
+#
+# Calculation of the difference in the gene-wise log-likelihood score (?GLS) for T1 versus T2 for each gene based on the supermatrix and substitution model that were used to infer the T1 (IqTree_tree)
+#
+# Calculation of the difference in the gene-wise quartet score (?GQS) for T1 versus T2 for each gene based on the set of individual gene trees that were used to infer the T2 (Astral_tree). 
+# 
+# Here: 
+# 	T1 = .treefile
+# 	T2 = _Scores_*.tre
+# 	ML2ASTRAL.tre = tree contains T1 and T2 
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/4_GLS-GQS_analises/GLS_parser/Genes_analises$ 
+
+cat Genes_MLSupmatrix_10Ago2021.treefile Genes_Scores_10Ago2021.tre > ML2ASTRAL_Genes.tre
+
+out files: ML2ASTRAL_Genes.tre
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#                                                   Section 1: GLS calculation
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+# I)  Estimate site-wise loglk for alternative hypothesis using iqtree with option (-wsl) 
+
+# -nt AUTO  Specify the number of CPU cores for the multicore version. A special option -nt AUTO will tell IQ-TREE to automatically 
+# -st Specify sequence type as either of DNA, AA, BIN, MORPH, CODON or NT2AA for DNA, amino-acid, binary, morphological, codon or DNA-to-AA-translated sequences.
+# -m is the option to specify the model name to use during the analysis.
+# - mem  Specify maximal RAM usage, for example, -mem 64G to use at most 64 GB of RAM.
+# -wsl Write site log-likelihoods to .sitelh file in TREE-PUZZLE format. Such file can then be passed on to CONSEL for further tree tests.
+# -z compute log-likelihoods of a set of trees passed
+# –spp  Gene-based partition file in RAxML-style, txt format
+# -s [dna alignment]
+# -pre [outfile]
+
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/4_GLS-GQS_analises/GLS_parser/Genes_analises$ 
+
+mkdir result_Genes_GLS 
+
+iqtree -st DNA -m GTR+G4 -wsl -s 234Gene_95taxaHornw_ConcateFull.phy -z ML2ASTRAL_Genes.tre -spp partition_234Gene_95taxaHornw_ConcateFull -pre result_Genes_GLS/ML2ASTRAL_Genes
+
+# analisis anterior rodado en el servidor
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+# II) Passer sits-wise log-likelihood file by GLS_parser_v1.pl (please make sure PERL has installed on your computer)
+# Used file "Site log-likelihoods:   result_*_GLS/*.sitelh" previous analysis. 
+
+
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/4_GLS-GQS_analises/Genes_full_10Ago2021/GLS_parser/Genes_analises
+
+
+mkdir parser_Genes_GLS
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/4_GLS-GQS_analises/Genes_full_10Ago2021/GLS_parser/Genes_analises/parser_Genes_GLS$ 
+
+
+perl GLS_parser_v1.pl ML2ASTRAL_10Ago2021_Genes.sitelh particiones_Genes_SuperMatriz_10Ago2021s.txt ML2ASTRAL_Genes_GLS_10_Ago2021
+
+# Analysis results written to:  ML2ASTRAL_Genes_GLS_10_Ago2021_table.txt
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+# 	                                         Section 2: GQS calculation
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+# I)	Passer gene-wise coalescent-based signal by GQS_parser_v1.pl (please make sure PERL has installed on your computer)
+
+
+# In this folder are files: i) GQS_parser_v1.pl; ii) RAxML_bestTree.L1.nodups.ED.prune.tre or absolute directory with the sequences; iii) T1 = .treefile; iv) T2 = _Scores_*.tre;  file program; file run.bat  
+ 
+# ------------------
+# ------------------
+# We edit the run.bat file with the commands to run all the sequences.
+# One line per sequence
+# With run.bat (e.g.)
+
+
+	perl GQS_parser_v1.pl gt=RAxML_bestTree.G4471.nodups.ED.prune.phy t1=ML_Genes_Supmatrix.treefile t2=Horn_Genes_Scores_17Mai2021.tre G4471_prune_GQS
+	... all genes trees ...
+
+# join all the .txt into one
+
+cat *.txt > result_Genes_GQS_table.txt
+
+# after the sequences edit the output folder of the files
+
+mkdir result_Genes_GQS
+mv *prune_GQS* result_Genes_GQS
+mv result_Genes_GQS_table.txt result_Genes_GQS
+pause
+
+
+
+# out file: one txt file per sequence
+	e.i. 
+	RAxML_bestTree.G4471.nodups.ED.prune.phy	tr1	1446386	1446176	210
+
+# ------------------
+
+perl GQS_parser_v1.pl gt=./BestTree/RAxML_bestTree.G4471_NEW.nodups.ED.prune.phy t1=Genes_MLSupmatrix.treefile t2=Genes_Scores_10Ago2021.tre G4471_prune_GQS
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/Analises_with_new_genes_Leios_03Ago2021/4_GLS-GQS_analises/GQS_parser/Genes_analises$ 
+
+run.bat #execute#
+
+
+# ------------------
+# ------------------
+
+# Compare consistent and inconsistent genes, once you have the values from the GLS and GQS analyses, create a table in Excel and
+# compare the values
+
+	Consistency	We assess the consistency of gene-wise phylogenetic signal calculated by the two measures for every gene.
+	Genes whose ΔGLS >0 and ΔGQS >0 (i.e., recovering T1) and genes whose ΔGLS <0 and ΔGQS <0 (i.e., recovering T2) are 		considered consistent
+	Genes whose ΔGLS ≥0 and ΔGQS ≤0 or vice versa are considered inconsistent
+
+# ------------------
+
+# Once the values are compared, separate the sequences of the congruent genes (final .phy), like the RAXML gene and locus trees
+# with the congruent Genes roll Iqtree with a concatenated matrix and Astral again to compare the topologies.
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+   
+   #                                6 analisis de IQtree y Astral genes cosistentes e Inconsistentes
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+   
+   
+#  Concatenation-based IQ-TREE
+
+# analises with hornworts seq per genes consistent
+
+# edit names the output files in concatenate.pl file
+# 2 output files- the supermatrix file and the gene partition file-
+
+# 1.1 - Genes consistent
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_concate/Genes_consis_concat$ 
+
+sudo perl 6_Gene_superMatriz_concate.pl 
+
+# 1.2 - Genes inconsistent
+
+gabriel@gabriel-Box:~/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_concate/Genes_NO_consis_concat$ 
+
+sudo perl 6_Gene_superMatriz_concate.pl 
+ 
+# ------------------
+# ------------------
+
+#            Tree Inference 
+#
+# 1.1 - Genes congruentes
+
+cd /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_concate/Genes_consis_concat/Genes_congruentes_IqTree
+
+iqtree --runs 5 -st DNA -s 148Genes_95taxaHornw_ConcatCongruen.phy -m GTR+G4 -spp Partition_148Genes_95taxaHornw_ConcatCongruen.txt -bb 1000 -pre 148Genes_Hornw_ConcatCongruen
+
+
+# 1.2 - Genes INcongruentes
+
+cd /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_concate/Genes_NO_consis_concat/Genes_NO_congruentes_IqTree
+
+iqtree --runs 5 -st DNA -s 86Genes_95taxaHornw_ConcaINcongruen.phy -m GTR+G4 -spp Partition_86Genes_95taxaHornw_ConcaINcongruen.txt -bb 1000 -pre 86Genes_Hornw_ConcaINcongruen
+
+# ------------------
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#
+#                                          ASTRAL ANALISES
+
+#----------------
+#----------------
+#----------------
+#----------------
+
+# concatenated the best tree files to create the input for ASTRAL-III with only locus/genes consistent
+# Run Astral 
+
+#----------------
+#----------------
+#----------------
+
+# 1.1.1 - Genes congruentes
+
+
+cd /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data
+
+cat *.phy > Gene_Trees_congruenGenes.tre
+
+#----------------
+#----------------
+#----------------
+
+# inferring a species tree from the set of gene trees(-i and -o )
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data/Gene_Trees_congruenGenes.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/SppTree_congruenGenes.tre
+
+#  out file: SppTree_congruenGenes.tre
+
+#----------------
+#----------------
+#----------------
+
+1.1.1 - Genes congruentes   #  Standard scoring, Scoring existing trees
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data/Gene_Trees_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/SppTree_congruenGenes.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_Scores_congruenGenes.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_Scores_congruenGenes.log
+
+#  out files: Astral_Scores_congruenGenes.tre  and  Astral_Scores_congruenGenes.log
+
+#----------------
+#----------------
+#----------------
+
+1.1.2 - Genes congruentes   # Alternative posteriors (-t 4)
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data/Gene_Trees_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/SppTree_congruenGenes.tre -t 4 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t4_AlterLpp.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t4_AlterLpp.log
+
+
+out files: Astral_congruenGenes_t4_AlterLpp.tre  and  Astral_congruenGenes_t4_AlterLpp.log
+
+#----------------
+#----------------
+#----------------
+
+1.1.3 - Genes congruentes   ## Alternative quartet topologies (-t 8)
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data/Gene_Trees_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/SppTree_congruenGenes.tre -t 8 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t8_AlterQuar.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t8_AlterQuar.log
+
+
+out files: Astral_congruenGenes_t8_AlterQuar.tre  and  Astral_congruenGenes_t8_AlterQuar.log
+
+#----------------
+#----------------
+#----------------
+
+1.1.4 - Genes congruentes   ## Full annotation (-t 2)
+
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Data/Gene_Trees_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/SppTree_congruenGenes.tre -t 2 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t2_FullAnnotation.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_consistent/Genes_congruentes_Astral/Astral_congruenGenes_t2_FullAnnotation.log
+
+
+out files: Astral_congruenGenes_t2_FullAnnotation.tre  and  Astral_congruenGenes_t2_FullAnnotation.log
+
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+
+# 1.2.1 - Genes INcongruentes
+
+cd /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data
+
+cat *.phy > Gene_Trees_NO_congruenGenes.tre
+
+#----------------
+#----------------
+#----------------
+
+# inferring a species tree from the set of gene trees(-i and -o )
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data/Gene_Trees_NO_congruenGenes.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/SppTree_NO_congruenGenes.tre
+
+#  out file: SppTree_congruenGenes.tre
+
+#----------------
+#----------------
+#----------------
+
+# 1.2.1 - Genes INcongruentes    #  Standard scoring, Scoring existing trees
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data/Gene_Trees_NO_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/SppTree_NO_congruenGenes.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_Scores_NO_congruenGenes.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_Scores_NO_congruenGenes.log
+  
+
+#  out files: Astral_Scores_NO_congruenGenes.tre  and  Astral_Scores_NO_congruenGenes.log
+
+#----------------
+#----------------
+#----------------
+
+1.2.2 - Genes INcongruentes   # Alternative posteriors (-t 4)
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data/Gene_Trees_NO_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/SppTree_NO_congruenGenes.tre -t 4 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t4_AlterLpp.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t4_AlterLpp.log
+  
+
+#  out files: Astral_NO_congruenGenes_t4_AlterLpp.tre  and  Astral_NO_congruenGenes_t4_AlterLpp.log
+
+#----------------
+#----------------
+#----------------
+
+1.2.3 - Genes INcongruentes   ## Alternative quartet topologies (-t 8)
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data/Gene_Trees_NO_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/SppTree_NO_congruenGenes.tre -t 8 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t8_AlterQuar.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t8_AlterQuar.log
+  
+
+#  out files: Astral_NO_congruenGenes_t8_AlterQuar.tre  and  Astral_NO_congruenGenes_t8_AlterQuar.log
+
+
+#----------------
+#----------------
+#----------------
+
+1.2.3 - Genes INcongruentes   ## Full annotation (-t 2)
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Data/Gene_Trees_NO_congruenGenes.tre -q /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/SppTree_NO_congruenGenes.tre -t 2 -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t2_FullAnnotation.tre 2> /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Genes/Genes_bestTree_coalecen/Genes_NO_consistent/Genes_NO_congruentes_Astral/Astral_NO_congruenGenes_t2_FullAnnotation.log
+  
+
+#  out files: Astral_NO_congruenGenes_t2_FullAnnotation.tre  and  Astral_NO_congruenGenes_t2_FullAnnotation.log
+
+
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+
+
+# inferring a species tree from the set of gene trees(-i and -o )
+
+java -jar astral.5.7.5.jar -i /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Locis/Locis_RAXML_BestTree/Locis_consistent/Data/Genes_Trees_congruenLocis.tre -o /home/gabriel/Documents/Goflag_honworts_metagenomic/testes/IqTree_vs_Astral/6_Consistent/Locis/Locis_RAXML_BestTree/Locis_consistent/Locis_congruentes_Astral/SppTrees_congruenLocis.tre 
+
+#  out file: SppTrees_congruenLocis.tre
+
+

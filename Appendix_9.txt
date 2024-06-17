@@ -1,0 +1,101 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#
+#  HyDe (Hybrid Detection)
+#_------------------------------------------
+# 
+#  https://www.asc.ohio-state.edu/kubatko.2//software/HyDe/HyDeInstructions.html
+# https://hybridization-detection.readthedocs.io/installation.html
+# https://github.com/pblischak/HyDe
+
+#--------------------------------------------------------#--------------------------------------------------------
+
+#   run_hyde.py [run_hyde_mp.py]:
+#   The run_hyde.py script detects hybridization by running a hypothesis test on all possible triplets in a data set in 
+#   all directions (i.e., a “full” HyDe analysis). There is also an option to supply a list of specific triplets 
+#   (three column text file) to test. The script outputs two files: one with all of the hypothesis tests that were 
+#   conducted and one with only those hypothesis tests that were significant a Bonferonni correction) with estimates 
+#   of ? at an overall ?=0.05 level (after incorporating between 0 and 1)
+
+#   individual_hyde.py [individual_hyde_mp.py]:
+#  The individual_hyde.py script runs separate hybridization detection analyses on each individual within a putative hybrid lineage. 
+#  The only additional input needed for the script is a three column list of triplets or a filtered results file from the run_hyde.py script
+#--------------------------------------------------------
+#--------------------------------------------------------
+#--------------------------------------------------------
+
+Options for run_hyde.py
+
+#  required arguments:
+  -i, --infile     name of the data input file
+  -m, --map        map of individuals to taxa
+  -o, --outgroup   name of the outgroup (only one accepted)
+  -n, --num_ind    number of individuals in data matrix
+  -t, --num_taxa   number of taxa (species, OTUs)
+  -s, --num_sites  number of sites in the data matrix
+
+# additional arguments:
+  -tr, --triples   table of triples to be analyzed
+  -p, --pvalue     p-value cutoff for test of significance [default=0.05]
+  --prefix           prefix appended to output files [default=hyde]
+  -q, --quiet          supress printing to stdout
+  --ignore_amb_sites   supress printing to stdout
+#--------------------------------------------------------
+
+# Options for individual_hyde.py
+
+options:
+  -h, --help           show this help message and exit
+
+required arguments:
+  -i, --infile     name of the data input file
+  -m, --map        map of individuals to taxa
+  -o, --outgroup   name of the outgroup (only one accepted)
+  -tr, --triples   table of triples to be analyzed.
+  -n, --num_ind    number of individuals in data matrix
+  -t, --num_taxa   number of taxa (species, OTUs)
+  -s, --num_sites  number of sites in the data matrix
+
+additional arguments:
+  --prefix           prefix appended to output files [default=hyde]
+  -q, --quiet          supress printing to stdout
+  --ignore_amb_sites   ignore missing/ambiguous sites
+
+#--------------------------------------------------------
+
+
+# Command Line Scripts
+
+# Run a full hybridization detection analysis
+# fulldata 234 genes 95 taxa
+
+# -o out -n 95 -t 95 -s 80855 -p 0.05
+
+cd HyDe
+run_hyde.py -i Hornworts/11_2_1_fulldata_234genes/Data_234G.txt -m Hornworts/11_2_1_fulldata_234genes/Taxon_map.txt -o out -n 95 -t 95 -s 80855 -p 0.05 --prefix Hornworts/11_2_1_fulldata_234genes/234G_result_hybritest_p005
+
+#---------
+# Test all individuals for the hybrid populations specified
+# in the file hyde-filtered-out.txt
+# hybridization at the individual level within the populations that have significant levels of hybridization, 
+# you can use the filtered results file from an analysis with run_hyde.py 
+#---------
+
+individual_hyde.py -i Hornworts/11_2_1_fulldata_234genes/Data_234G.txt -m Hornworts/11_2_1_fulldata_234genes/Taxon_map.txt -tr Hornworts/11_2_1_fulldata_234genes/234G_result_hybritest-out-filtered_p005.txt -o out -n 95 -t 95 -s 80855 --prefix Hornworts/11_2_1_fulldata_234genes/234G_result_hybritest_Indivi_p005
+
+
+#------------------------
+#------------------------
+
+
+

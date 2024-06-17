@@ -1,0 +1,2 @@
+RAXML=raxmlHPC
+PARAMETERS= -T 2 -m GTRGAMMA -f d -p 12345 -N 20 -n Best.tree

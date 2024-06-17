@@ -1,0 +1,822 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Article title: Ancient reticulation and incomplete lineage sorting at the dawn of hornwort diversification and origin of the pyrenoid in the Carboniferous.
+
+Peñaloza-Bojacá et al.-Diversity 2024
+
+*	Correspondence: gpenaloza.bojaca@gmail.com; juan-carlos.villarreal-aguilar@bio.ulaval.ca
+
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+
+Snaq
+
+https://github.com/JuliaLang/julia/blob/master/doc/src/devdocs/build/build.md#required-build-tools-and-external-libraries
+
+# Required Build Tools and External Libraries
+
+ sudo apt-get install build-essential libatomic1 python gfortran perl wget m4 cmake pkg-config curl
+ 
+ sudo apt-get install build-essential
+ 
+ # clone
+ 
+ git clone https://github.com/JuliaLang/julia.git
+ 
+ # To build the julia executable, run make from within the julia directory.
+ 
+ cd julia
+ make
+ 
+ # Your first test of Julia determines whether your build is working properly. 
+ # From the julia directory, type make testall. 
+ # You should see output that lists a series of running tests; 
+ # if they complete without error, you should be in good shape to start using Julia.
+ 
+ make testall
+ 
+ #------------------- #-------------------
+  #------------------- #-------------------
+# Installation of the package PhyloNetworks
+
+
+# Installing RCall.jl    # install firts R
+# The R_HOME environment variable, if set, should be the location of the R home directory. You could run R.home()
+R.home()
+
+# "/usr/lib/R"
+
+ENV["R_HOME"] = "/usr/lib/R"
+
+
+#------------------- #-------------------
+
+import Pkg; Pkg.add("PhyloNetworks")
+Pkg.add("PhyloPlots")
+Pkg.update()
+
+ 
+#------------------- #------------------- #------------------- #------------------- #-------------------
+# test Snaq
+
+using PhyloNetworks;
+less("/home/gabriel/julia/Honworts_Test/raxmltrees.tre")
+# exti
+q
+using PhyloNetworks;
+raxmltrees_test1 = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/raxmltrees.tre")
+genetrees = readMultiTopology(raxmltrees_test1);
+genetrees[3]
+
+using PhyloPlots
+plot(genetrees[3]); 
+
+q,t = countquartetsintrees(genetrees);                    # read in trees, calculate quartet CFs
+df = writeTableCF(q,t)                                     # data frame with observed CFs: gene frequencies
+
+using CSV
+CSV.write("./Honworts_Test/tableCF_test1.csv", df);                        # to save the data frame to a file
+raxmlCF_test1 = readTableCF("./Honworts_Test/tableCF_test1.csv")           # read in the file and produces a "DataCF" object
+
+#------------------- #------------------- #------------------- #------------------- #-------------------
+#------------------- #-------------------       TEST           #------------------- #-------------------
+
+# Input for SNaQ
+
+# https://crsl4.github.io/PhyloNetworks.jl/dev/man/inputdata/
+
+
+
+
+#################################################################################################################################################################
+################                                   test topo 1
+#################################################################################################################################################################
+
+#
+#---------------------- 1 step: all time need run
+
+cd julia
+./julia
+
+using CSV, DataFrames, PhyloNetworks, PhyloPlots, RCall 
+
+#---------------------- 2 step: call map taxon 
+
+
+mappingfile = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/mapping_ONLY_hornworts.csv");
+
+
+tm = CSV.read(mappingfile, DataFrame) # taxon map as a data frame
+taxonmap = Dict(row[:individual] => row[:species] for row in eachrow(tm)) # taxon map as a dictionary
+
+#---------------------- 3 step: call gene tree
+
+geneTrees = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/GenesTrees_onlyHornworts.tre");
+
+genetrees_Ast = readMultiTopology(geneTrees);
+
+
+#---------------------- 4 step: calculate quartet CFs
+
+df_sp = writeTableCF(countquartetsintrees(genetrees_Ast, taxonmap, showprogressbar=false)...);
+# CSV.write("./Honworts_Test/Astral/tableCF_genera_Ast7.csv", df_sp);      
+raxmlCF_Ast7 = readTableCF(df_sp); 
+
+#---------------------- 5 step: starting tree
+
+
+Generostree_hipo2= joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/Generos_Leios-sister-all_ONlyHornworts.tre");
+tree_Ast7 = readTopology(Generostree_hipo2);
+
+#---------------------- 6 step: Network Estimation
+# -------------             net 0 ,  hmax=0 , runs=10:   ------------ 
+
+net0 = snaq!(tree_Ast7,raxmlCF_Ast7, hmax=0, filename="./Honworts_Test/Astral/net0_Ast7", seed=123, runs=10);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0_Ast7.pdf", width=12, height=16);
+plot(net0, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0_Ast7.svg", width=12, height=16); 
+plot(net0, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+rootatnode!(net0, "Leiosporoceros");
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0-root_Ast7.svg", width=12, height=16); 
+plot(net0, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+#---------------------- 7 step: Network Estimation
+# ------------- net 1  hmax=1 , runs=10:  ------------ 
+
+net1 = snaq!(net0,raxmlCF_Ast7, hmax=1, filename="/home/gabriel/julia/Honworts_Test/Astral/net1_Ast7", seed=456, runs=10);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1_Ast7.pdf", width=12, height=16);
+plot(net1, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1_Ast7.svg", width=12, height=16); 
+plot(net1, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+# net1 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/net1_Ast7.out");
+rootatnode!(net1, "Leiosporoceros");
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1-root_Ast7.svg", width=12, height=16); 
+plot(net1, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+#---------------------- 8 step: Network Estimation
+# ------------- net 2  hmax=2 , runs=5:  ------------ 
+
+net2 = snaq!(net1,raxmlCF_Ast7, hmax=2, filename="/home/gabriel/julia/Honworts_Test/Astral/net2_Ast7", seed=789, runs=10);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2_Ast7.pdf", width=12, height=16);
+plot(net2, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2_Ast7.svg", width=12, height=16); 
+plot(net2, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+# rootatnode!(net2, "Leiosporoceros");
+# rootonedge!(net2, 20);
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2-root_Ast7.svg", width=12, height=16); 
+plot(net2, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#---------------------- 9 step: Network Estimation
+# ------------- net 3  hmax=3 , runs=5  ------------ 
+
+net3 = snaq!(net2,raxmlCF_Ast7, hmax=3, filename="/home/gabriel/julia/Honworts_Test/Astral/net3_Ast7", seed=248, runs=5);
+
+plot(net3, :R);
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3_Ast7.pdf", width=12, height=16);
+plot(net3, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3_Ast7.svg", width=12, height=16); 
+plot(net3, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+rootonedge!(net3, 25);
+# rootatnode!(net3, "Leiosporoceros");
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3-root_Ast7.svg", width=12, height=16); 
+plot(net3, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#best network and networks with different hybrid/gene flow directions printed to .networks file
+#the network obtained by putting the new hybrid in node -6 is not good, inCycle,gammaz,containRoot: Bool[1, 1, 0], we will skip it
+#the network obtained by putting the new hybrid in node -11 is not good, inCycle,gammaz,containRoot: Bool[1, 1, 0], we will skip it
+
+#---------------------- 10 step: Network Estimation
+# ------------- net 4  hmax=3 , runs=5  ------------ 
+
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/net0_Ast7.out");
+plot(net0, showgamma=true, showedgenumber=true);
+rootonedge!(net0, 17);
+
+net4 = snaq!(net0,raxmlCF_Ast7, hmax=3, filename="/home/gabriel/julia/Honworts_Test/Astral/net4_Ast7", seed=351, runs=5);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4_Ast7.pdf", width=12, height=16);
+plot(net4, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4_Ast7.svg", width=12, height=16); 
+plot(net4, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+rootonedge!(net4, 7);
+plot(net4, showgamma=true, showedgenumber=true);
+
+#rootatnode!(net4, "Leiosporoceros");
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4-root_Ast7.svg", width=12, height=16); 
+plot(net4, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------                                                      Choice of number of hybridizations                     ------------ 
+
+# Each network has a loglik attribute, which is its pseudo deviance: a multiple of the negative log-likelihood up to a constant 
+# (the constant is such that the score is 0 if the network fits the data perfectly). The lower the better. We can plot these scores across hybrid values:
+
+cd julia
+./julia
+
+using Gadfly, CSV, DataFrames, PhyloNetworks, PhyloPlots, RCall 
+
+# seleccionamos el menor valor del resultado obtenido en el archivo .out  valo de -Ploglik 
+
+# with h=0 = 633.6424473588318
+# with h=1 = 271.6401525769612
+# with h=2 = 256.5974045345284
+# with h=3 = 255.4298731076257    # menor valor de score
+# with h=4 = 255.6684933136881
+
+scoresa = [633.6424473588318, 271.6401525769612, 256.5974045345284, 255.4298731076257,255.6684933136881 ]
+hmaxa = collect(0:4)
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_scores_Ast7.pdf", width=12, height=16); 
+R"plot"(hmaxa, scoresa, type="b", ylab="network score", xlab="hmax", col="blue");
+R"dev.off()";
+
+#----------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+#-------------------------  Generando arboles para visualizar resultados 
+#----------------------------------------------------------------------------------------------------
+
+
+#-------------------------------------hipo tree
+Generostree_hipo2= joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/Generos_Leios-sister-all_ONlyHornworts.tre");
+tree_hipo2 = readTopology(Generostree_hipo2);
+plot(tree_hipo2);
+#-------------------------------------net 0
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net0_Ast7.out");
+plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+# rootonedge!(net0, 11); # enraizar
+# rotate!(net0, -3);  # girar nodos
+plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+R"mtext"("hipo Generos_Leios-sister-all net0, hmax=0", line=-1)
+
+#-------------------------------------net 1
+net1 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net1_Ast7.out");
+plot(net1, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+# rootonedge!(net1, 11); # enraizar
+# rotate!(net1, -3);  # girar nodos
+plot(net1, tipoffset=0.2, shownodenumber=true, edgecolor="Grey",
+minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net1_Ast7/hipo2:Leios-sist-all, hmax=1", line=-1)
+
+#-------------------------------------net 2
+net2 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net2_Ast7.out");
+plot(net2, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+# rootonedge!(net0, 11); # enraizar
+# rotate!(net0, -3);  # girar nodos
+plot(net2, tipoffset=0.2, shownodenumber=true, edgecolor="Grey",
+minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net2_Ast7/hipo2:Leios-sist-all, hmax=2", line=-1)
+
+
+#-------------------------------------net 3
+net3= readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net3_Ast7.out");
+plot(net3, tipoffset=0.2, shownodenumber=true, edgecolor="Grey",
+minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+
+# rootonedge!(net3, 11);
+# rotate!(net3, -11);
+plot(net3, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net3_Ast7/hipo2:Leios-sist-all, hmax=3", line=-1)
+
+plot(net3, showgamma=true, showedgenumber=true);
+
+#-------------------------------------net 4 
+
+net4 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net4_Ast7.out");
+plot(net4, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+
+plot(net4, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net4_Ast7/hipo2:Leios-sist-all, net0-hmax=3", line=-1)
+
+##############################################################################
+##############################################################################
+#-------------------------------------summary grafic
+##############################################################################
+##############################################################################
+
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/Ast7/plot_result_hibri_Ast7.pdf", width=20, height=16); 
+R"layout(matrix(1:6,3,2))";
+#-------------------------------------hipo tree
+plot(tree_hipo2);
+R"mtext"("Hipo 2: Leios-sister-all", line=-0.1)
+
+#-------------------------------------net 0
+plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+R"mtext"("hipo Generos_Leios-sister-all net0, hmax=0", line=-1)
+
+#-------------------------------------net 1
+plot(net1, tipoffset=0.2, shownodenumber=true, edgecolor="Grey",
+minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net1_Ast7/hipo2:Leios-sist-all, hmax=1", line=-1)
+
+#-------------------------------------net 2
+plot(net2, tipoffset=0.2, shownodenumber=true, edgecolor="Grey",
+minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net2_Ast7/hipo2:Leios-sist-all, hmax=2", line=-1)
+
+#-------------------------------------net 3
+plot(net3, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net3_Ast7/hipo2:Leios-sist-all, hmax=3", line=-1)
+
+#-------------------------------------net 4 
+plot(net4, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net4_Ast7/hipo2:Leios-sist-all, net0-hmax=3", line=-1)
+
+R"dev.off()";
+
+
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+
+# Extract Expected CFs
+#--------------
+
+# plot the observed CF versus the expected CF
+
+mappingfile = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/mapping_ONLY_hornworts.csv");
+tm = CSV.read(mappingfile, DataFrame); # taxon map as a data frame
+taxonmap = Dict(row[:individual] => row[:species] for row in eachrow(tm)); # taxon map as a dictionary
+
+geneTrees = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/GenesTrees_onlyHornworts.tre");
+genetrees_Ast = readMultiTopology(geneTrees);
+
+#----------------------------------------#----------------------------------------
+#----------------------------------------#----------------------------------------
+
+#- calculate quartet CFs
+
+df_sp = writeTableCF(countquartetsintrees(genetrees_Ast, taxonmap, showprogressbar=false)...);   
+raxmlCF_Ast7 = readTableCF(df_sp); 
+
+truenet_ast7 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net3_Ast7.out");
+
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast7/net0_Ast7.out");
+plot(net0, showgamma=true, showedgenumber=true);
+# rootonedge!(net0, 13);
+# rotate!(net0, -11);
+plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+
+
+plot(truenet_ast7, showgamma=true, showedgenumber=true);
+
+# rootonedge!(truenet_ast7, 13);
+# rotate!(truenet_ast7, -11);
+
+plot(truenet_ast7, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/truenet_ast7.pdf", width=12, height=16); 
+plot(truenet_ast7, tipoffset=0.2, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"dev.off()";
+
+#--------------
+
+topologyMaxQPseudolik!(truenet_ast7, raxmlCF_Ast7);
+
+df_wide = fittedQuartetCF(raxmlCF_Ast7, :wide);
+CSV.write("./Honworts_Test/Astral/table_CFs-df_wide_genera_Ast7.csv", df_wide);      
+
+df_long = fittedQuartetCF(raxmlCF_Ast7, :long);
+CSV.write("./Honworts_Test/Astral/table_CFs-df_long_genera_Ast7.csv", df_wide);      
+
+using RCall
+# To install ggplot2 if not installed already, do: R"install.packages('ggplot2', dep=TRUE)"
+
+@rlibrary ggplot2
+ggplot(df_long, aes(x=:obsCF,y=:expCF)) + theme_classic() +
+    geom_segment(x=0,y=0,xend=1,yend=1, color="#008080") + # diagonal line
+    geom_point(alpha=0.5, color="#e34a33", position=position_jitter(width=0.005, height=0.005)) +
+    ylab("quartet CF expected from network") + xlab("quartet CF observed in gene trees") + coord_equal(ratio=1);
+# if needed, save with:
+ggsave("/home/gabriel/julia/Honworts_Test/Astral/Ast7_expCFs_obsvsfitted.pdf", scale=1, width=6, height=5);
+
+#-----------
+# We could highlight quartets that include taxon Leiosporoceros
+
+using DataFrames
+df_long[!,:Leios] .= "no"; # add a column to our data, to indicate which 4-taxon sets have A or not
+for r in eachrow(df_long)
+    if "Leiosporoceros" ∈ [r[:tx1], r[:tx2], r[:tx3], r[:tx4]]
+       r[:Leios]="yes"
+    end
+end
+
+ggplot(df_long, aes(x=:obsCF, y=:expCF, color=:Leios)) + theme_classic() +
+    geom_segment(x=0,y=0,xend=1,yend=1, color="black") + # diagonal line
+    geom_point(alpha=0.5, position=position_jitter(width=0.005, height=0.005)) +
+    ylab("quartet CF expected from network") + xlab("quartet CF observed in gene trees") + coord_equal(ratio=1);
+ggsave("/home/gabriel/julia/Honworts_Test/Astral/Ast7_expCFs_obsvsfitted_leios.pdf", scale=1, width=6, height=5);
+
+
+
+
+#################################################################################################################################################################
+################                                   Test topo 2
+################        
+#################################################################################################################################################################
+
+#
+#---------------------- 1 step: all time need run
+
+cd julia
+./julia
+
+using CSV, DataFrames, PhyloNetworks, PhyloPlots, RCall 
+
+#---------------------- 2 step: call map taxon 
+
+
+mappingfile = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/mapping_ONLY_hornworts.csv");
+
+
+tm = CSV.read(mappingfile, DataFrame) # taxon map as a data frame
+taxonmap = Dict(row[:individual] => row[:species] for row in eachrow(tm)) # taxon map as a dictionary
+
+#---------------------- 3 step: call gene tree
+
+geneTrees = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/GenesTrees_onlyHornworts.tre");
+
+genetrees_Ast = readMultiTopology(geneTrees);
+
+
+#---------------------- 4 step: calculate quartet CFs
+
+df_sp = writeTableCF(countquartetsintrees(genetrees_Ast, taxonmap, showprogressbar=false)...);
+CSV.write("./Honworts_Test/Astral/tableCF_genera_Ast8.csv", df_sp);      
+raxmlCF_Ast8 = readTableCF(df_sp); 
+
+#---------------------- 5 step: starting tree
+# arbol de generos construidos sin largo de ramas en R
+
+Generostree_hipo1= joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/Generos_Leios-sister-antho_ONlyHornworts.tre");
+tree_Ast8 = readTopology(Generostree_hipo1);
+
+plot(tree_Ast8, showgamma=true, showedgenumber=true);
+#---------------------- 6 step: Network Estimation
+# -------------             net 0 ,  hmax=0 , runs=10:   ------------ 
+
+net0 = snaq!(tree_Ast8,raxmlCF_Ast8, hmax=0, filename="./Honworts_Test/Astral/net0_Ast8", seed=123, runs=10);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0_Ast8.pdf", width=12, height=16);
+plot(net0, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0_Ast8.svg", width=12, height=16); 
+plot(net0, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+# rootonedge!(net0, 11); # enraizar
+# rotate!(net0, -3);  # girar nodos
+# plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net0-root_Ast8.svg", width=12, height=16); 
+plot(net0, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+#---------------------- 7 step: Network Estimation
+# ------------- net 1  hmax=1 , runs=10:  ------------ 
+
+net1 = snaq!(net0,raxmlCF_Ast8, hmax=1, filename="/home/gabriel/julia/Honworts_Test/Astral/net1_Ast8", seed=456, runs=5);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1_Ast8.pdf", width=12, height=16);
+plot(net1, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1_Ast8.svg", width=12, height=16); 
+plot(net1, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+# rootonedge!(net1, 11); # enraizar
+# rotate!(net1, -3);  # girar nodos
+# plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net1-root_Ast8.svg", width=12, height=16); 
+plot(net1, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#---------------------- 8 step: Network Estimation
+# ------------- net 2  hmax=2 , runs=5:  ------------ 
+
+net1 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/net1_Ast8.out");
+
+net2 = snaq!(net1,raxmlCF_Ast8, hmax=2, filename="/home/gabriel/julia/Honworts_Test/Astral/net2_Ast8", seed=789, runs=5);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2_Ast8.pdf", width=12, height=16);
+plot(net2, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2_Ast8.svg", width=12, height=16); 
+plot(net2, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+rootonedge!(net2, 21); 
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net2-root_Ast8.svg", width=12, height=16); 
+plot(net2, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#---------------------- 9 step: Network Estimation
+# ------------- net 3  hmax=3 , runs=5  ------------ 
+
+net3 = snaq!(net2,raxmlCF_Ast8, hmax=3, filename="/home/gabriel/julia/Honworts_Test/Astral/net3_Ast8", seed=248, runs=5);
+
+plot(net3, :R);
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3_Ast8.pdf", width=12, height=16);
+plot(net3, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3_Ast8.svg", width=12, height=16); 
+plot(net3, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+rootonedge!(net3, 9); 
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net3-root_Ast8.svg", width=12, height=16); 
+plot(net3, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#best network and networks with different hybrid/gene flow directions printed to .networks file
+#the network obtained by putting the new hybrid in node -6 is not good, inCycle,gammaz,containRoot: Bool[1, 1, 0], we will skip it
+#the network obtained by putting the new hybrid in node -11 is not good, inCycle,gammaz,containRoot: Bool[1, 1, 0], we will skip it
+
+
+#---------------------- 10 step: Network Estimation
+# ------------- net 4  hmax=3 , runs=5  ------------ 
+
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/net0_Ast8.out");
+plot(net0, showgamma=true, showedgenumber=true);
+rootonedge!(net0, 21);
+
+net4 = snaq!(net0,raxmlCF_Ast8, hmax=3, filename="/home/gabriel/julia/Honworts_Test/Astral/net4_Ast8", seed=351, runs=5);
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4_Ast8.pdf", width=12, height=16);
+plot(net4, :R);
+R"dev.off()";
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4_Ast8.svg", width=12, height=16); 
+plot(net4, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+rootonedge!(net4, 7);
+plot(net4, showgamma=true, showedgenumber=true);
+
+
+R"svg"("/home/gabriel/julia/Honworts_Test/Astral/plot_net4-root_Ast8.svg", width=12, height=16); 
+plot(net4, showgamma=true, showedgenumber=true);
+R"dev.off()";
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------                                                      Choice of number of hybridizations                     ------------ 
+
+# Each network has a loglik attribute, which is its pseudo deviance: a multiple of the negative log-likelihood up to a constant 
+# (the constant is such that the score is 0 if the network fits the data perfectly). The lower the better. We can plot these scores across hybrid values:
+
+cd julia
+./julia
+
+using Gadfly, CSV, DataFrames, PhyloNetworks, PhyloPlots, RCall
+
+# seleccionamos el menor valor del resultado obtenido en el archivo .out  valo de -Ploglik 
+
+# with h=0 = 633.6424473573295
+# with h=1 = 271.6859067815356
+# with h=2 = 256.5325468844373
+# with h=3 = 254.74778820172543    # menor valor de score
+# with h=4 = 255.71779063592075
+
+scores = [633.6424473573295, 271.6859067815356, 256.5325468844373, 254.74778820172543,255.71779063592075 ]
+hmax = collect(0:4)
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/plot_scores_Ast8.pdf", width=12, height=16); 
+R"plot"(hmax, scores, type="b", ylab="network score", xlab="hmax", col="blue");
+R"dev.off()";
+
+#----------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
+#-------------------------  Generando arboles para visualizar resultados 
+#----------------------------------------------------------------------------------------------------
+
+#-------------------------------------hipo tree
+Generostree_hipo1= joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/Generos_Leios-sister-antho_ONlyHornworts.tre");
+tree_Ast8 = readTopology(Generostree_hipo1);
+
+plot(tree_Ast8, showgamma=true, showedgenumber=true);
+R"mtext"("Hipo 1: Generos_Leios-sister-Antho", line=-1)
+
+#-------------------------------------net 0
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net0_Ast8.out");
+plot(net0, showgamma=true, showedgenumber=true);
+# rootonedge!(net0, 20); # enraizar
+# rotate!(net0, );  # girar nodos
+plot(net0, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net0_Ast8, hmax=0", line=-1)
+
+#-------------------------------------net 1
+net1 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net1_Ast8.out");
+plot(net1, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+# rootonedge!(net1, 21); # enraizar
+# rotate!(net1, );  # girar nodos
+plot(net1, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net1_Ast8, hmax=1", line=-1)
+
+#-------------------------------------net 2
+net2 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net2_Ast8.out");
+plot(net2, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+# rootonedge!(net2, 5); # enraizar
+# rotate!(net0, -3);  # girar nodos
+plot(net2, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net2_Ast8, hmax=2", line=-1)
+
+
+#-------------------------------------net 3
+net3= readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net3_Ast8.out");
+plot(net3, showgamma=true, showedgenumber=true);
+
+# rootonedge!(net3, 22);
+# rotate!(net3, -11);
+plot(net3, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net3_Ast8, hmax=3", line=-1)
+
+
+#-------------------------------------net 4 
+
+net4 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net4_Ast8.out");
+plot(net4, showgamma=true, showedgenumber=true);
+
+# rootonedge!(net4, 22);
+# rotate!(net4, 21);
+
+plot(net4, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net4_Ast8, net0-hmax=3", line=-1)
+
+##############################################################################
+##############################################################################
+#-------------------------------------summary grafic
+##############################################################################
+##############################################################################
+
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/Ast8/plot_result_hibri_Ast8.pdf", width=20, height=16); 
+R"layout(matrix(1:6,3,2))";
+#-------------------------------------hipo tree
+plot(tree_Ast8, showgamma=true, showedgenumber=true);
+R"mtext"("Hipo 1: Generos_Leios-sister-Antho", line=-1)
+
+#-------------------------------------net 0
+plot(net0, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net0_Ast8, hmax=0", line=-1)
+
+#-------------------------------------net 1
+plot(net1, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net1_Ast8, hmax=1", line=-1)
+
+#-------------------------------------net 2
+plot(net2, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net2_Ast8, hmax=2", line=-1)
+
+#-------------------------------------net 3
+plot(net3, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net3_Ast8, hmax=3", line=-1)
+
+#-------------------------------------net 4 
+plot(net4, tipoffset=0.1, showgamma=true, shownodenumber=true, edgecolor="Grey", minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"mtext"("net4_Ast8, net0-hmax=3", line=-1)
+
+R"dev.off()";
+
+
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+
+# Extract Expected CFs
+#--------------
+
+# plot the observed CF versus the expected CF
+
+mappingfile = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/mapping_ONLY_hornworts.csv");
+tm = CSV.read(mappingfile, DataFrame); # taxon map as a data frame
+taxonmap = Dict(row[:individual] => row[:species] for row in eachrow(tm)); # taxon map as a dictionary
+
+geneTrees = joinpath(dirname(pathof(PhyloNetworks)), "/home/gabriel/julia/Honworts_Test/Astral/GenesTrees_onlyHornworts.tre");
+genetrees_Ast = readMultiTopology(geneTrees);
+
+#----------------------------------------#----------------------------------------
+#----------------------------------------#----------------------------------------
+
+#- calculate quartet CFs
+
+df_sp = writeTableCF(countquartetsintrees(genetrees_Ast, taxonmap, showprogressbar=false)...);   
+raxmlCF_Ast8 = readTableCF(df_sp); 
+
+truenet_ast8= readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net3_Ast8.out");
+
+net0 = readTopology("/home/gabriel/julia/Honworts_Test/Astral/Ast8/net0_Ast8.out");
+plot(net0, showgamma=true, showedgenumber=true);
+# rootonedge!(net0, 13);
+# rotate!(net0, -11);
+plot(net0, tipoffset=0.2, shownodenumber=true, edgecolor="Grey");
+
+
+plot(truenet_ast8, showgamma=true, showedgenumber=true);
+
+# rootonedge!(truenet_ast8, 13);
+# rotate!(truenet_ast8, -11);
+
+plot(truenet_ast8, tipoffset=0.2, shownodenumber=true, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+
+R"pdf"("/home/gabriel/julia/Honworts_Test/Astral/truenet_ast8.pdf", width=12, height=16); 
+plot(truenet_ast8, tipoffset=0.2, showgamma=true, edgecolor="Grey",
+     minorhybridedgecolor="skyblue", majorhybridedgecolor="Red");
+R"dev.off()";
+
+#--------------
+
+topologyMaxQPseudolik!(truenet_ast8, raxmlCF_Ast8);
+
+df_wide = fittedQuartetCF(raxmlCF_Ast8, :wide);
+CSV.write("./Honworts_Test/Astral/table_CFs-df_wide_genera_Ast8.csv", df_wide);      
+
+df_long = fittedQuartetCF(raxmlCF_Ast8, :long);
+CSV.write("./Honworts_Test/Astral/table_CFs-df_long_genera_Ast8.csv", df_wide);      
+
+using RCall
+# To install ggplot2 if not installed already, do: R"install.packages('ggplot2', dep=TRUE)"
+
+@rlibrary ggplot2
+ggplot(df_long, aes(x=:obsCF,y=:expCF)) + theme_classic() +
+    geom_segment(x=0,y=0,xend=1,yend=1, color="#008080") + # diagonal line
+    geom_point(alpha=0.5, color="#e34a33", position=position_jitter(width=0.005, height=0.005)) +
+    ylab("quartet CF expected from network") + xlab("quartet CF observed in gene trees") + coord_equal(ratio=1);
+# if needed, save with:
+ggsave("/home/gabriel/julia/Honworts_Test/Astral/Ast8_expCFs_obsvsfitted.pdf", scale=1, width=6, height=5);
+
+#-----------
+# We could highlight quartets that include taxon Leiosporoceros
+
+using DataFrames
+df_long[!,:Leios] .= "no"; # add a column to our data, to indicate which 4-taxon sets have A or not
+for r in eachrow(df_long)
+    if "Leiosporoceros" ∈ [r[:tx1], r[:tx2], r[:tx3], r[:tx4]]
+       r[:Leios]="yes"
+    end
+end
+
+ggplot(df_long, aes(x=:obsCF, y=:expCF, color=:Leios)) + theme_classic() +
+    geom_segment(x=0,y=0,xend=1,yend=1, color="black") + # diagonal line
+    geom_point(alpha=0.5, position=position_jitter(width=0.005, height=0.005)) +
+    ylab("quartet CF expected from network") + xlab("quartet CF observed in gene trees") + coord_equal(ratio=1);
+ggsave("/home/gabriel/julia/Honworts_Test/Astral/Ast8_expCFs_obsvsfitted_leios.pdf", scale=1, width=6, height=5);
+
+
+
+
+
