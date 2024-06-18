@@ -1,0 +1,197 @@
+#NEXUS
+begin taxa;
+	dimensions ntax=95;
+	taxlabels
+	UFG_393201_P02_WA01_Leiosporoceros_dussii[&!color=#ff0000]
+	UFG_393201_P02_WA02_Phaeoceros_exiguus
+	UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus
+	UFG_393201_P02_WB02_Phaeoceros_himalayensis
+	UFG_393201_P02_WC01_Anthoceros_tuberculatus
+	UFG_393201_P02_WC02_Targionia_hypophylla
+	UFG_393201_P02_WD01_Anthoceros_sp
+	UFG_393201_P02_WD02_Plagiochasma_cordatum
+	UFG_393201_P02_WE01_Phymatoceros_sp
+	UFG_393201_P02_WE02_Phaeoceros_sp
+	UFG_393201_P02_WF01_Phymatoceros_cf_bulbiculosus
+	UFG_393201_P02_WF02_Phaeoceros_sp
+	UFG_393201_P02_WG01_Anthoceros_erectus
+	UFG_393201_P02_WG02_Phaeoceros_perpusillus
+	UFG_393201_P02_WH01_Notothylas_levieri
+	UFG_393201_P02_WH02_Phaeoceros_kashyapii
+	UFG_393202_P016_WE12_Anthoceros_lamellatus
+	UFG_393202_P016_WF12_Dendroceros_crispus
+	UFG_393202_P019_WB08_Nothoceros_aenigmaticus
+	UFG_393202_P019_WF07_Phaeoceros_carolinianus
+	UFG_393202_P019_WG07_Anthoceros_fusiformis
+	UFG_393202_P019_WH07_Anthoceros_agrestis
+	UFG_393202_P024_WG07_Nothoceros_fuegiensis
+	UFG_393202_P031_WE01_Sphagnum_magellanicum
+	UFG_393202_P032_WC09_Ceratodon_purpureus
+	UFG_393202_P033_WA01_Anthoceros_punctatus
+	UFG_393202_P033_WA02_Marchantia_polymorpha
+	UFG_393202_P033_WA04_Riccia_beyrichiana
+	UFG_393202_P033_WB01_Anthoceros_agrestis
+	UFG_393202_P033_WB04_Ricciocarpos_natans
+	UFG_393202_P033_WC01_Phaeoceros_laevis
+	UFG_393202_P033_WD01_Phaeoceros_carolinianus
+	UFG_393202_P034_WA01_Monoclea_forsteri
+	UFG_393202_P034_WB01_Monoclea_gottschei
+	UFG_393202_P034_WB03_Riccia_bicarinata
+	UFG_393202_P034_WF07_Riccardia_incurvata
+	UFG_393202_P034_WG02_Sphaerocarpos_cristatus
+	UFG_393202_P034_WH07_Riccardia_latifrons
+	UFG_393202_P037_WD03_Bryum_argenteum
+	UFG_393202_P039_WE11_Sphaerocarpos_drewei
+	UFG_393202_P040_WA09_Anomodon_attenuatus
+	UFG_393202_P053_WA02_Anthoceros_laminiferus
+	UFG_393202_P053_WA03_Nothoceros_canaliculatus
+	UFG_393202_P053_WA04_Anthoceros_subtilis
+	UFG_393202_P053_WA05_Phaeoceros_cf_laevis
+	UFG_393202_P053_WA07_Megaceros_flagellaris
+	UFG_393202_P053_WB02_Nothoceros_giganteus
+	UFG_393202_P053_WB03_Nothoceros_fuegiensis
+	UFG_393202_P053_WB04_Notothylas_breutelii
+	UFG_393202_P053_WB05_Anthoceros_sp_macounii
+	UFG_393202_P053_WB07_Phaeomegaceros_plicatus
+	UFG_393202_P053_WC02_Anthoceros_bharadwajii
+	UFG_393202_P053_WC03_Anthoceros_punctatus
+	UFG_393202_P053_WC05_Anthoceros_tristanianus
+	UFG_393202_P053_WC07_Phymatoceros_phymatodes
+	UFG_393202_P053_WD01_Anthoceros_sp_nov
+	UFG_393202_P053_WD02_Nothoceros_sp_Nov2
+	UFG_393202_P053_WD03_Nothoceros_endiviifolius
+	UFG_393202_P053_WD04_Notothylas_orbicularis
+	UFG_393202_P053_WD06_Folioceros_fuciformis
+	UFG_393202_P053_WD07_Phaeoceros_mohrii
+	UFG_393202_P053_WE02_Nothoceros_endiviifolius
+	UFG_393202_P053_WE03_Nothoceros_vincentianus_clade_2
+	UFG_393202_P053_WE06_Folioceros_amboinensis
+	UFG_393202_P053_WF01_Anthoceros_erectus
+	UFG_393202_P053_WF02_Anthoceros_neesii
+	UFG_393202_P053_WF03_Anthoceros_caucasicus
+	UFG_393202_P053_WF04_Notothylas_sp
+	UFG_393202_P053_WF06_Phaeomegaceros_skottsbergii
+	UFG_393202_P053_WG01_Anthoceros_fusiformis
+	UFG_393202_P053_WG02_Anthoceros_cf_agrestis_sp_nov
+	UFG_393202_P053_WG03_Anthoceros_subtilis
+	UFG_393202_P053_WG04_Phaeoceros_himalayensis
+	UFG_393202_P053_WG05_Phaeoceros_perpusillus
+	UFG_393202_P053_WG06_Phaeomegaceros_coriaceus
+	UFG_393202_P053_WH02_Nothoceros_schizophyllus
+	UFG_393202_P053_WH03_Notothylas_cf_javanica
+	UFG_393202_P053_WH05_Dendroceros_crispatus
+	UFG_393202_P053_WH06_Megaceros_tjibodensis
+	UFG_393202_P054_WA04_Megaceros_austronesophilus
+	UFG_393202_P054_WB04_Megaceros_flagellaris
+	UFG_393202_P054_WC04_Megaceros_gracilis
+	UFG_393202_P054_WD04_Phaeoceros_engelii
+	UFG_393202_P054_WE04_Phaeoceros_evanidus
+	UFG_393202_P054_WG03_Dendroceros_granulatus
+	UFG_393202_P054_WH03_Folioceros_fuciformis
+	UFG_393202_P060_WC08_Paraphymatoceros_diadematus
+	UFG_393202_P060_WD05_Anthoceros_macounii
+	UFG_393202_P060_WE03_Folioceros_argillaceus
+	UFG_393202_P060_WF11_Folioceros_cf_pinnatus
+	UFG_393202_P060_WH06_Anthoceros_cf_schroederi
+	UFG_393202_P090_WC01_Dendroceros_cichoriaceus
+	UFG_393202_P090_WE04_Nothoceros_sp_Nov_2
+	UFG_393202_P090_WF01_Nothoceros_endiviifolius
+	UFG_393202_P090_WG08_Dendroceros_acutilobus
+;
+end;
+
+begin trees;
+	tree tree_1 = [&R] (UFG_393201_P02_WA01_Leiosporoceros_dussii[&!color=#ff0000]:0.169566,(((((((((UFG_393202_P090_WF01_Nothoceros_endiviifolius:0.006899,(UFG_393202_P053_WA03_Nothoceros_canaliculatus:0.004361,UFG_393202_P053_WH02_Nothoceros_schizophyllus:0.004295)[&label="100/100/74.6/74"]:0.005768)[&label="100/100/53.5/50.8"]:0.00297,((UFG_393202_P090_WE04_Nothoceros_sp_Nov_2:9.19E-4,UFG_393202_P053_WD02_Nothoceros_sp_Nov2:0.001351)[&label="100/100/69.7/80.9"]:0.00263,UFG_393202_P019_WB08_Nothoceros_aenigmaticus:0.002975)[&label="100/100/74.8/80"]:0.004871)[&label="96/96/26.8/29.5"]:6.67E-4,UFG_393202_P053_WE03_Nothoceros_vincentianus_clade_2:0.005663)[&label="100/100/96.9/81"]:0.021712,((UFG_393202_P053_WB03_Nothoceros_fuegiensis:0.004917,UFG_393202_P024_WG07_Nothoceros_fuegiensis:0.004971)[&label="100/100/82.4/78.4"]:0.010328,(UFG_393202_P053_WB02_Nothoceros_giganteus:0.005622,(UFG_393202_P053_WE02_Nothoceros_endiviifolius:9.19E-4,UFG_393202_P053_WD03_Nothoceros_endiviifolius:8.35E-4)[&label="100/100/88.2/91.7"]:0.005995)[&label="100/100/82.6/76.7"]:0.005859)[&label="100/100/54/56.7"]:0.003243)[&label="100/100/89.1/70.5"]:0.021974,(((UFG_393202_P053_WA07_Megaceros_flagellaris:9.13E-4,UFG_393202_P054_WB04_Megaceros_flagellaris:7.18E-4)[&label="100/100/100/98.5"]:0.03837,((UFG_393202_P054_WC04_Megaceros_gracilis:0.005043,UFG_393202_P053_WH06_Megaceros_tjibodensis:0.005444)[&label="100/100/76.2/65.5"]:0.005055,UFG_393202_P054_WA04_Megaceros_austronesophilus:0.007841)[&label="100/100/98.4/84.7"]:0.024014)[&label="100/100/71.5/54.9"]:0.009236,(((UFG_393202_P090_WG08_Dendroceros_acutilobus:0.002639,UFG_393202_P016_WF12_Dendroceros_crispus:0.003401)[&label="100/100/96.5/93.1"]:0.023021,(UFG_393202_P054_WG03_Dendroceros_granulatus:0.002941,UFG_393202_P053_WH05_Dendroceros_crispatus:0.004405)[&label="100/100/97.2/91.6"]:0.02412)[&label="100/100/88.4/57.6"]:0.018184,UFG_393202_P090_WC01_Dendroceros_cichoriaceus:0.022058)[&label="100/100/88.5/66.6"]:0.034818)[&label="100/100/68.8/39.6"]:0.012563)[&label="100/100/66.7/30.1"]:0.011731,(UFG_393202_P053_WG06_Phaeomegaceros_coriaceus:0.008914,((UFG_393202_P053_WF06_Phaeomegaceros_skottsbergii:0.001729,UFG_393202_P053_WB07_Phaeomegaceros_plicatus:0.002579)[&label="100/100/70.2/78"]:0.00334,UFG_393201_P02_WB01_Phaeomegaceros_fimbriatus:0.006613)[&label="100/100/80.3/68.6"]:0.007302)[&label="100/100/58.9/74.9"]:0.004406)[&label="100/100/82.7/64.7"]:0.045545,(UFG_393202_P053_WC07_Phymatoceros_phymatodes:0.008809,UFG_393201_P02_WE01_Phymatoceros_sp:0.009549)[&label="100/100/90.2/89.9"]:0.047608)[&label="100/100/69/50.4"]:0.038555,(((((UFG_393201_P02_WB02_Phaeoceros_himalayensis:0.002646,UFG_393202_P053_WG04_Phaeoceros_himalayensis:0.001682)[&label="100/100/32.2/58.8"]:0.001083,((UFG_393201_P02_WE02_Phaeoceros_sp:4.8E-5,UFG_393201_P02_WF02_Phaeoceros_sp:2.73E-4)[&label="100/100/59.6/98.1"]:0.004023,(UFG_393201_P02_WF01_Phymatoceros_cf_bulbiculosus:0.005082,UFG_393201_P02_WH02_Phaeoceros_kashyapii:0.003643)[&label="100/100/30.6/38"]:9.34E-4)[&label="3.8/58/13.2/29.9"]:2.9E-4)[&label="100/100/81/86.8"]:0.013396,(((((UFG_393202_P053_WD07_Phaeoceros_mohrii:0.001034,UFG_393202_P033_WD01_Phaeoceros_carolinianus:8.63E-4)[&label="100/100/61.2/87"]:0.002901,((UFG_393202_P053_WG05_Phaeoceros_perpusillus:7.65E-4,UFG_393201_P02_WG02_Phaeoceros_perpusillus:8.63E-4)[&label="100/100/53.3/84.8"]:0.002944,(UFG_393202_P033_WC01_Phaeoceros_laevis:0.00355,UFG_393202_P053_WA05_Phaeoceros_cf_laevis:0.004027)[&label="49.9/74/17.5/36.4"]:6.22E-4)[&label="100/100/23/51.2"]:0.001496)[&label="100/100/20.3/48.5"]:8.82E-4,(UFG_393202_P019_WF07_Phaeoceros_carolinianus:0.004466,UFG_393201_P02_WD01_Anthoceros_sp:0.002341)[&label="100/100/46.7/65.4"]:0.002585)[&label="100/100/16.7/43.4"]:7.91E-4,(UFG_393201_P02_WA02_Phaeoceros_exiguus:0.001867,UFG_393202_P054_WE04_Phaeoceros_evanidus:0.001202)[&label="100/100/52.5/82"]:0.004054)[&label="99.9/100/37.7/46.7"]:0.001369,UFG_393202_P054_WD04_Phaeoceros_engelii:0.006024)[&label="100/100/65.4/72.4"]:0.007176)[&label="100/100/71.2/66.8"]:0.019152,UFG_393202_P060_WC08_Paraphymatoceros_diadematus:0.023756)[&label="100/100/51.3/69.2"]:0.015983,((UFG_393202_P053_WH03_Notothylas_cf_javanica:0.014255,((UFG_393202_P053_WD04_Notothylas_orbicularis:0.003677,UFG_393202_P053_WF04_Notothylas_sp:0.006493)[&label="100/100/72.5/79.5"]:0.006664,UFG_393201_P02_WH01_Notothylas_levieri:0.023034)[&label="98.1/98/24.4/31.6"]:0.001772)[&label="100/100/43.8/43.6"]:0.007222,UFG_393202_P053_WB04_Notothylas_breutelii:0.010912)[&label="100/100/91.8/90.5"]:0.11757)[&label="100/100/64.7/47"]:0.042083)[&label="100/100/64.1/52.6"]:0.100705,(((((((UFG_393202_P053_WF01_Anthoceros_erectus:0.002884,UFG_393201_P02_WG01_Anthoceros_erectus:0.00318)[&label="99.7/100/38.9/100"]:0.004562,UFG_393202_P053_WC02_Anthoceros_bharadwajii:0.002699)[&label="93.8/98/26.2/50.4"]:0.001813,UFG_393202_P053_WD01_Anthoceros_sp_nov:0.004903)[&label="100/100/62.7/74.6"]:0.011681,UFG_393202_P053_WA04_Anthoceros_subtilis:0.005186)[&label="100/100/43.7/56.7"]:0.008769,((UFG_393202_P053_WF02_Anthoceros_neesii:0.00428,UFG_393202_P053_WG03_Anthoceros_subtilis:0.004982)[&label="100/100/53.6/72"]:0.006546,(((UFG_393202_P033_WA01_Anthoceros_punctatus:4.34E-4,UFG_393202_P053_WC03_Anthoceros_punctatus:6.48E-4)[&label="100/100/71.8/93.7"]:0.004013,((UFG_393202_P053_WG02_Anthoceros_cf_agrestis_sp_nov:0.005458,(UFG_393202_P033_WB01_Anthoceros_agrestis:2.14E-4,UFG_393202_P019_WH07_Anthoceros_agrestis:7.0E-5)[&label="100/100/62.4/97.2"]:0.003109)[&label="89.5/94/17.1/81.8"]:5.11E-4,UFG_393202_P053_WA02_Anthoceros_laminiferus:0.03436)[&label="91/87/8.33/9.77"]:3.94E-4)[&label="95.3/92/12/36.6"]:6.46E-4,(UFG_393202_P060_WH06_Anthoceros_cf_schroederi:0.004141,UFG_393202_P016_WE12_Anthoceros_lamellatus:0.004922)[&label="100/100/42.7/62.1"]:0.002189)[&label="100/100/50.8/62"]:0.004082)[&label="100/100/29.7/55.2"]:0.005505)[&label="100/100/31/53.8"]:0.007139,(((((UFG_393202_P060_WF11_Folioceros_cf_pinnatus:0.003474,(UFG_393202_P054_WH03_Folioceros_fuciformis:3.43E-4,UFG_393202_P053_WD06_Folioceros_fuciformis:2.53E-4)[&label="100/100/80.2/94.6"]:0.004343)[&label="100/100/98.2/89.1"]:0.01966,UFG_393202_P053_WE06_Folioceros_amboinensis:0.015236)[&label="100/100/90.4/63.1"]:0.015637,UFG_393202_P060_WE03_Folioceros_argillaceus:0.026866)[&label="100/100/70.3/53.2"]:0.012342,UFG_393202_P053_WB05_Anthoceros_sp_macounii:0.022882)[&label="99.8/100/34.4/25.6"]:0.003661,(UFG_393202_P053_WG01_Anthoceros_fusiformis:0.001431,UFG_393202_P019_WG07_Anthoceros_fusiformis:0.001845)[&label="100/100/94.3/96"]:0.012843)[&label="96.9/98/25.2/29.7"]:0.001345)[&label="100/100/46.7/42.1"]:0.01044,((UFG_393202_P060_WD05_Anthoceros_macounii:0.007827,UFG_393202_P053_WC05_Anthoceros_tristanianus:0.011459)[&label="100/100/70.9/72.7"]:0.009789,(UFG_393201_P02_WC01_Anthoceros_tuberculatus:0.029307,UFG_393202_P053_WF03_Anthoceros_caucasicus:0.020568)[&label="100/100/40.2/39.7"]:0.005027)[&label="94.2/93/46.7/47.6"]:0.004304)[&label="100/100/82.1/82.2"]:0.152105)[&label="97.6/96/32.8/32.5"]:0.036148,((((UFG_393202_P040_WA09_Anomodon_attenuatus:0.066268,UFG_393202_P037_WD03_Bryum_argenteum:0.112763)[&label="100/100/52.6/39.7"]:0.033893,UFG_393202_P032_WC09_Ceratodon_purpureus:0.08118)[&label="100/100/98.3/66.2"]:0.205361,UFG_393202_P031_WE01_Sphagnum_magellanicum:0.221968)[&label="100/100/79.3/44.1"]:0.129583,(((((((UFG_393202_P034_WA01_Monoclea_forsteri:0.011649,UFG_393202_P034_WB01_Monoclea_gottschei:0.012885)[&label="100/100/99.1/91.4"]:0.09562,(UFG_393202_P033_WB04_Ricciocarpos_natans:0.064834,(UFG_393202_P033_WA04_Riccia_beyrichiana:0.011657,UFG_393202_P034_WB03_Riccia_bicarinata:0.014657)[&label="100/100/98/87.7"]:0.12118)[&label="100/100/56.8/37.8"]:0.030247)[&label="90.7/94/22.4/27.3"]:0.005997,UFG_393201_P02_WC02_Targionia_hypophylla:0.080037)[&label="100/100/34/32"]:0.014445,UFG_393201_P02_WD02_Plagiochasma_cordatum:0.075243)[&label="100/100/67.4/41.9"]:0.045632,UFG_393202_P033_WA02_Marchantia_polymorpha:0.112828)[&label="100/100/52.1/40"]:0.05325,(UFG_393202_P039_WE11_Sphaerocarpos_drewei:0.05393,UFG_393202_P034_WG02_Sphaerocarpos_cristatus:0.056925)[&label="100/100/80.4/67.4"]:0.0711)[&label="100/100/72.1/49.8"]:0.118326,(UFG_393202_P034_WH07_Riccardia_latifrons:0.053431,UFG_393202_P034_WF07_Riccardia_incurvata:0.064263)[&label="100/100/89.2/77.2"]:0.214879)[&label="100/100/82.2/45.6"]:0.138543)[&label="100/100/91.4/58.4"]:0.255597);
+end;
+
+begin figtree;
+	set appearance.backgroundColorAttribute="Default";
+	set appearance.backgroundColour=#ffffff;
+	set appearance.branchColorAttribute="User selection";
+	set appearance.branchColorGradient=false;
+	set appearance.branchLineWidth=2.0;
+	set appearance.branchMinLineWidth=0.0;
+	set appearance.branchWidthAttribute="Fixed";
+	set appearance.foregroundColour=#000000;
+	set appearance.hilightingGradient=false;
+	set appearance.selectionColour=#2d3680;
+	set branchLabels.colorAttribute="User selection";
+	set branchLabels.displayAttribute="label";
+	set branchLabels.fontName="sansserif";
+	set branchLabels.fontSize=12;
+	set branchLabels.fontStyle=0;
+	set branchLabels.isShown=false;
+	set branchLabels.significantDigits=4;
+	set layout.expansion=1000;
+	set layout.layoutType="RECTILINEAR";
+	set layout.zoom=0;
+	set legend.attribute="label";
+	set legend.fontSize=10.0;
+	set legend.isShown=false;
+	set legend.significantDigits=4;
+	set nodeBars.barWidth=4.0;
+	set nodeBars.displayAttribute=null;
+	set nodeBars.isShown=false;
+	set nodeLabels.colorAttribute="User selection";
+	set nodeLabels.displayAttribute="label";
+	set nodeLabels.fontName="sansserif";
+	set nodeLabels.fontSize=12;
+	set nodeLabels.fontStyle=0;
+	set nodeLabels.isShown=true;
+	set nodeLabels.significantDigits=4;
+	set nodeShapeExternal.colourAttribute="User selection";
+	set nodeShapeExternal.isShown=false;
+	set nodeShapeExternal.minSize=10.0;
+	set nodeShapeExternal.scaleType=Width;
+	set nodeShapeExternal.shapeType=Circle;
+	set nodeShapeExternal.size=4.0;
+	set nodeShapeExternal.sizeAttribute="Fixed";
+	set nodeShapeInternal.colourAttribute="User selection";
+	set nodeShapeInternal.isShown=false;
+	set nodeShapeInternal.minSize=10.0;
+	set nodeShapeInternal.scaleType=Width;
+	set nodeShapeInternal.shapeType=Circle;
+	set nodeShapeInternal.size=4.0;
+	set nodeShapeInternal.sizeAttribute="Fixed";
+	set polarLayout.alignTipLabels=false;
+	set polarLayout.angularRange=0;
+	set polarLayout.rootAngle=0;
+	set polarLayout.rootLength=100;
+	set polarLayout.showRoot=true;
+	set radialLayout.spread=0.0;
+	set rectilinearLayout.alignTipLabels=false;
+	set rectilinearLayout.curvature=0;
+	set rectilinearLayout.rootLength=100;
+	set scale.offsetAge=0.0;
+	set scale.rootAge=1.0;
+	set scale.scaleFactor=1.0;
+	set scale.scaleRoot=false;
+	set scaleAxis.automaticScale=true;
+	set scaleAxis.fontSize=8.0;
+	set scaleAxis.isShown=false;
+	set scaleAxis.lineWidth=1.0;
+	set scaleAxis.majorTicks=1.0;
+	set scaleAxis.minorTicks=0.5;
+	set scaleAxis.origin=0.0;
+	set scaleAxis.reverseAxis=false;
+	set scaleAxis.showGrid=true;
+	set scaleBar.automaticScale=true;
+	set scaleBar.fontSize=10.0;
+	set scaleBar.isShown=true;
+	set scaleBar.lineWidth=1.0;
+	set scaleBar.scaleRange=0.0;
+	set tipLabels.colorAttribute="User selection";
+	set tipLabels.displayAttribute="Names";
+	set tipLabels.fontName="sansserif";
+	set tipLabels.fontSize=12;
+	set tipLabels.fontStyle=0;
+	set tipLabels.isShown=true;
+	set tipLabels.significantDigits=4;
+	set trees.order=true;
+	set trees.orderType="increasing";
+	set trees.rooting=true;
+	set trees.rootingType="User Selection";
+	set trees.transform=false;
+	set trees.transformType="cladogram";
+end;
+
